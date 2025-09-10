@@ -1,0 +1,9 @@
+pycparser
+cffi
+bcrypt
+PyNaCl
+cryptography
+paramiko
+pysftp
+asn1
+enum_compat
