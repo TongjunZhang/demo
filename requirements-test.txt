@@ -1,0 +1,7 @@
+boto3
+moto
+#==4.2.13
+pytest-cov
+#==5.0.0
+requests
+urllib3
