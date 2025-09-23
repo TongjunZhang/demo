@@ -35,15 +35,15 @@ class Argunents:
         self.args: dict = None
         self.arg_parse = argparse.ArgumentParser()
         # Define all required and optional arguments
-        self.arg_parse.add_argument('--conf_table', help='Dynamodb Configuration Table', type=str, required=True)
-        self.arg_parse.add_argument('--ops_table', help='Dynamodb Operations table', type=str, required=True)
+        self.arg_parse.add_argument('--conf_table', help='Marketo Configuration Table', type=str, required=True)
+        self.arg_parse.add_argument('--ops_table', help='Marketo Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
         self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=True)
         self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
-        self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_raw")
+        self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
         self.arg_parse.add_argument('--region_name', help="region to use", type=str, required=False, default="us-east-2")
-        self.arg_parse.add_argument('--source', help="source of the data", type=str, required=False, default="marketoETL")
+        self.arg_parse.add_argument('--source', help="source of the data", type=str, required=False, default="zoomInfo")
         self.arg_parse.add_argument('--job_name', help="name of the glue job", type=str, required=False, default="glue_marketo_snowflake_to_osc")
         self.arg_parse.add_argument('--max_workers', help="max workers for threading", type=int, required=False, default=5)
 
@@ -86,7 +86,7 @@ def process_pipeline(
         logger.error(f"Error getting secret data: {e}")
         return
 
-    logger.info('Step: Get data from dynamics')
+    logger.info('Step: Get data from zoominfo from snowflake')
     zoomInfo_rows = None
     try:
         # Fetch entity data from Snowflake
@@ -113,7 +113,7 @@ def process_pipeline(
         payload = None
         try:
             # Store item in Snowflake
-            payload = snowflake_io(
+            payload = MarketoETL(
                 args=args_u,
                 logger=logger
             ).put_item(row)
@@ -128,7 +128,7 @@ def process_pipeline(
                 logger=logger,
                 pipeline_id=pipeline_id,
                 execution_id=execution_id
-            ).put_payload_data(
+            ).create_OSC_Account(
                 payload_data=payload
             )
         except Exception as e:
