@@ -111,7 +111,7 @@ class testosc_io(unittest.TestCase):
         secret_data = mock_get_secret.return_value
         source = "osc_ic"
         
-        execution_max_watermark, s3_key = self.osc_io_instance.get_entity_data(watermark, secret_data, self.access_token, source)
+        execution_max_watermark, s3_key = self.osc_io_instance.create_OSC_Account(watermark, secret_data, self.access_token, source)
         # Verify the result
         self.assertIsNotNone(execution_max_watermark)
         self.assertIsNotNone(s3_key)

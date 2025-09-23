@@ -3,7 +3,6 @@
 from tasks.https_io import HttpsIo
 from tasks.aws_api_io import SecretsManagerIO, MarketoETL
 import logging
-import json
 import boto3
 import argparse
 import snowflake.connector

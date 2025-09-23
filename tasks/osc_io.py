@@ -1,12 +1,8 @@
 # tasks/osc_io.py
 
-from urllib3.util.retry import Retry
-from requests.adapters import HTTPAdapter
-from tasks.aws_api_io import SecretsManagerIO, MarketoETL
 from tasks.https_io import HttpsIo
 import requests
 import logging
-import time
 import argparse
 import boto3
 
