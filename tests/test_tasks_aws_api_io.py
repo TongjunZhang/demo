@@ -1,10 +1,10 @@
-from unittest.mock import MagicMock, patch
+from unittest.mock import MagicMock
 import boto3
 import logging
 import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
 import unittest
-from boto3.dynamodb.conditions import Key, Attr
+from boto3.dynamodb.conditions import Key
 from botocore.exceptions import ClientError
 import json
 
