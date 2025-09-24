@@ -35,6 +35,53 @@ class MarketoETL:
         self.resource = self.boto3_session.resource('DM_Snowflake_OSC_nonprod_DQ_ETL')
         self.logger = logging.getLogger() if logger is None else logger
 
+    def get_items(self,
+                  table_name: str,
+                  key: Dict,
+                  fields: str = None,
+                  scan_column_forward: str = None
+                  ):
+        """
+        Get the item from the table
+
+        Args:
+            table_name: name of the table
+            key: key to get the item
+            fields: fields to get
+            scan_column_forward: column to sort the records on
+
+        Returns:
+            item object
+        """
+        table = self.set_table(table_name)
+        scan_kwargs = {}
+        ## building the search key conditions.
+        key_condition = Key(list(key.keys())[0]).eq(list(key.values())[0])
+        for k, v in list(key.items())[1:]:
+            key_condition &= Attr(k).eq(v)
+
+        scan_kwargs['FilterExpression'] = key_condition
+        if fields:
+            scan_kwargs['ProjectionExpression'] = fields
+
+        self.logger.info("Getting items from table %s with filter of %s" % (table_name, key))
+        complete_results = []
+        done = False
+        start_key = None
+        while not done:
+            if start_key:
+                scan_kwargs['ExclusiveStartKey'] = start_key
+            records = table.scan(**scan_kwargs)
+            complete_results.extend(records['Items'])
+            start_key = records.get('LastEvaluatedKey', None)
+            done = start_key is None
+
+        self.logger.info(
+            "Got items from table %s with filter of %s, record count: %s" % (table_name, key, len(complete_results)))
+        if scan_column_forward and complete_results:
+            complete_results.sort(key=lambda x: x[scan_column_forward], reverse=True)
+        return complete_results
+
     def put_item(self, row) -> str:
         """
         Create a payload from a ZoomInfo row.

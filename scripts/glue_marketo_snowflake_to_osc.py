@@ -35,8 +35,8 @@ class Argunents:
         self.args: dict = None
         self.arg_parse = argparse.ArgumentParser()
         # Define all required and optional arguments
-        # self.arg_parse.add_argument('--conf_table', help='Marketo Configuration Table', type=str, required=True)
-        # self.arg_parse.add_argument('--ops_table', help='Marketo Operations table', type=str, required=True)
+        self.arg_parse.add_argument('--conf_table', help='MarketETL Configuration Table', type=str, required=True)
+        self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
         self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=True)
         self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
@@ -95,7 +95,7 @@ def process_pipeline(
             logger=logger,
             pipeline_id=pipeline_id,
             execution_id=execution_id
-        ).get_entity_data(
+        ).transfer_entity_data(
             watermark=watermark_value,
             secret_data=secret_data,
             source=args_u.source
