@@ -1,33 +1,24 @@
 inputSet:
   name: on_push_input_set
   identifier: on_push_input_set
+  tags: {}
   orgIdentifier: eap
-  projectIdentifier: enterprise_data_management
+  projectIdentifier: eap_support_tools
   pipeline:
     identifier: cci_eap_glue_marketo
-    variables:
-      - name: project_name
-        type: String
-        value: cci_eap_glue_marketo
-      - name: image_name
-        type: String
-        value: cci_eap_glue_marketo
-      - name: upload_bucket
-        type: String
-        value: azure-devops-ci-storage-xm5r8j75nw
-      - name: ecr_url
-        type: String
-        value: 069422982184.dkr.ecr.us-east-2.amazonaws.com
-      - name: pull_ecr_url
-        type: String
-        value: 069422982184.dkr.ecr.us-east-2.amazonaws.com
-    properties:
-      ci:
-        codebase:
-          connectorRef: account.dnd_engineering_enterprise_github_connector
-          repoName: cci_eap_glue_marketo
-          build:
-            type: branch
-            spec:
-              branch: <+trigger.branch>
-  object Object: pipeline.properties.ci.codebase
+    template:
+      templateInputs:
+        properties:
+          ci:
+            codebase:
+              build:
+                type: branch
+                spec:
+                  branch: <+trigger.branch>
+        variables:
+          - name: SONAR_LOG_LEVEL
+            type: String
+            value: INFO
+          - name: SONAR_PYTHON_VERSION
+            type: String
+            value: "3.9"
