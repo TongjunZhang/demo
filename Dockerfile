@@ -1,4 +1,4 @@
-FROM nexus.crowncastle.com:8843/base-image-aws-glue-libs-4-0-0:latest AS base
+FROM amazon/aws-glue-libs:glue_libs_4.0.0_image_01 as base
 ENV AWS_REGION=us-east-2
 ENV AWS_ACCESS_KEY_ID=dummy
 ENV AWS_SECRET_ACCESS_KEY=dummy
@@ -25,7 +25,6 @@ ENTRYPOINT ["bash"]
 # TEST:
 FROM base as test
 COPY ./tests /home/glue_user/workspace/tests/
-COPY ./tasks /home/glue_user/workspace/tasks/
 COPY ./requirements-test.txt requirements-test.txt
 RUN pip3 install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --no-cache-dir --upgrade -r requirements-test.txt
 RUN python3 -m pytest tests/ --doctest-modules --junitxml=/home/glue_user/workspace/volume/junit/test-results.xml --cov=/home/glue_user/workspace/tasks --cov-report=xml:/home/glue_user/workspace/volume/coverage/xml/coverage.xml --cov-report=html:/home/glue_user/workspace/volume/coverage/html --cov-report=term-missing --cov-branch

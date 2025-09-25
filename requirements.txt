@@ -1,9 +1,5 @@
-pycparser
-cffi
-bcrypt
-PyNaCl
-cryptography
-paramiko
-pysftp
-asn1
-enum_compat
+requests
+boto3
+snowflake
+urllib3
+botocore

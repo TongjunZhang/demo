@@ -1,73 +1,129 @@
 pipeline:
-  name: cci_eap_edmdq_marketo
-  identifier: cci_eap_edmdq_marketo
-  description: ci for the cdp pipeline check routine
+  name: cci_eap_glue_marketo
+  identifier: cci_eap_glue_marketo
+  projectIdentifier: enterprise_data_management
+  orgIdentifier: eap
   tags: {}
-  template:
-    templateRef: account.glue_ci
-    templateInputs:
-      properties:
-        ci:
-          codebase:
-            connectorRef: account.dnd_engineering_enterprise_github_connector
-            repoName: cci-eap-edmdq-marketo
-            build: <+input>
-      stages:
-        - stage:
-            identifier: ci
+  properties:
+    ci:
+      codebase:
+        connectorRef: account.dnd_engineering_enterprise_github_connector
+        repoName: cci_eap_glue_marketo
+        build: <+input>
+  stages:
+    - stage:
+        name: ci
+        identifier: ci
+        template:
+          templateRef: account.python_lambda_ci
+          templateInputs:
             type: CI
+            spec:
+              execution:
+                steps:
+                  - step:
+                      identifier: upload_lambda_to_S3
+                      type: S3Upload
+                      spec:
+                        connectorRef: account.AWS_Shared_Services_Via_Platform
             variables:
-              - name: MAIN_BRANCH_NAME
-                type: String
-                value: main
-              - name: TEST_LAYER
-                type: String
-                value: test
-              - name: ARTIFACT_LAYER
-                type: String
-                value: build
-              - name: AWS_REGION
-                type: String
-                value: us-east-2
               - name: AWS_ACCOUNT_ID
                 type: String
                 value: "069422982184"
-              - name: S3_ARTIFACT_BUCKET
+              - name: UPLOAD_BUCKET
                 type: String
-                value: azure-devops-ci-storage-xm5r8j75nw
-              - name: GLUE_BUCKET_PATH
+                value: <+pipeline.variables.upload_bucket>
+              - name: IMAGE_NAME
                 type: String
-                value: cci-eap-edmdq-marketo
-              - name: CUSTOM_PACKAGE_PREFIX
+                value: <+pipeline.variables.image_name>
+              - name: TAG_VALUE
                 type: String
-                value: cci_eap_edmdq_marketo
-      variables:
-        - name: project_name
-          type: String
-          value: cci-eap-edmdq-marketo
-        - name: upload_bucket
-          type: String
-          value: azure-devops-ci-storage-xm5r8j75nw
-        - name: image_name
-          type: String
-          value: cci-eap-edmdq-marketo
-        - name: tag_value
-          type: String
-          value: <+pipeline.executionId>
-        - name: git_dir_for_nexus
-          type: String
-          value: /harness/.git
-        - name: pull_ecr_url
-          type: String
-          value: 069422982184.dkr.ecr.us-east-2.amazonaws.com
-        - name: ecr_url
-          type: String
-          value: 069422982184.dkr.ecr.us-east-2.amazonaws.com
-        - name: SONAR_LOG_LEVEL
-          type: String
-          value: <+input>.default(INFO)
-        - name: SONAR_PYTHON_VERSION
-          type: String
-          value: <+input>.default(3.9)
-  projectIdentifier: enterprise_data_management
-  orgIdentifier: eap
+                value: <+pipeline.variables.tag_value>
+              - name: ARTIFACT_REPOSITORY_PULL_URL
+                type: String
+                value: <+pipeline.variables.pull_ecr_url>
+              - name: ARTIFACT_REPOSITORY_URL
+                type: String
+                value: <+pipeline.variables.ecr_url>
+              - name: ARTIFACT_LAYER
+                type: String
+                value: artifact
+              - name: TEST_LAYER
+                type: String
+                value: test
+              - name: SONAR_URL_INTERNAL_BY_NAME
+                type: String
+                value: <+variable.account.sonarqube_url_internal_by_ip>
+              - name: SONAR_INTERNAL_ANALYSIS_KEY
+                type: Secret
+                value: account.sonarqube_harness_production_ng
+              - name: NEXUSIQ_SERVER_IP
+                type: String
+                value: <+variable.account.nexusiq_url_internal_by_ip>
+              - name: NEXUSIQ_SERVER_SECRET
+                type: Secret
+                value: account.zcontinuumpass
+              - name: AWS_ACCESS_KEY_ID
+                type: Secret
+                value: account.gkmsharnessdeployuseraccesskeyid
+              - name: AWS_SECRET_ACCESS_KEY
+                type: Secret
+                value: account.gkmsharnessdeployusersecretaccesskey
+              - name: AWS_REGION
+                type: String
+                value: us-east-2
+  variables:
+    - name: project_name
+      type: String
+      description: |-
+        string with the (slugified?) name of the project
+        e.g. refimplpieordererlambda
+      value: cci_eap_glue_marketo
+    - name: image_name
+      type: String
+      description: |-
+        string with the image name of the project
+        e.g. ref-impl-pie-orderer-lambda
+      value: cci_eap_glue_marketo
+    - name: tag_value
+      type: String
+      description: This could/perhaps should be overridden depending on the branch
+      value: <+pipeline.sequenceId>
+    - name: artifact_packaging
+      type: String
+      description: Could be zip, could be jar, etc
+      value: zip
+    - name: git_dir_for_nexus
+      type: String
+      description: ""
+      value: /harness/.git
+    - name: upload_bucket
+      type: String
+      description: ""
+      value: <+input>.default(azure-devops-ci-storage-xm5r8j75nw)
+    - name: aws_access_key
+      type: Secret
+      description: ""
+      value: account.gkmsharnessdeployuseraccesskeyid
+    - name: aws_secret_key
+      type: Secret
+      description: ""
+      value: account.gkmsharnessdeployusersecretaccesskey
+    - name: sonarqube_url_internal_by_name
+      type: String
+      description: ""
+      value: <+variable.account.sonarqube_url_internal_by_ip>
+    - name: sonarqube_internal_analysis_key
+      type: Secret
+      description: ""
+      value: account.sonarqube_harness_production_ng
+    - name: ecr_url
+      type: String
+      description: this is the ecr we are pushing images to (defaults to lab for now)
+      required: false
+      value: <+input>.default(069422982184.dkr.ecr.us-east-2.amazonaws.com)
+    - name: pull_ecr_url
+      type: String
+      description: We pull images from shared services
+      required: false
+      value: <+input>.default(069422982184.dkr.ecr.us-east-2.amazonaws.com)
