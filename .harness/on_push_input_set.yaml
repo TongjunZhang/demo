@@ -5,7 +5,7 @@ inputSet:
   orgIdentifier: eap
   projectIdentifier: eap_support_tools
   pipeline:
-    identifier: cci-eap-edmdq-marketo
+    identifier: cci_eap_edmdq_marketo
     template:
       templateInputs:
         properties:
