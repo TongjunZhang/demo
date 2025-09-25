@@ -1,6 +1,6 @@
 pipeline:
-  name: cci-eap-edmdq-marketo
-  identifier: cci-eap-edmdq-marketo
+  name: cci_eap_edmdq_marketo
+  identifier: cci_eap_edmdq_marketo
   description: ci for the cdp pipeline check routine
   tags: {}
   template:
@@ -40,7 +40,7 @@ pipeline:
                 value: cci-eap-edmdq-marketo
               - name: CUSTOM_PACKAGE_PREFIX
                 type: String
-                value: cci-eap-edmdq-marketo
+                value: cci_eap_edmdq_marketo
       variables:
         - name: project_name
           type: String
