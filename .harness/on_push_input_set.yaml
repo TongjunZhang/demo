@@ -22,3 +22,4 @@ inputSet:
           - name: SONAR_PYTHON_VERSION
             type: String
             value: "3.9"
+
