@@ -5,9 +5,8 @@ setup(
     version="0.1.0",
     packages=find_packages(include=['tasks','tasks.utils', 
                                     'tasks', 'tasks.aws_api_io', 
-                                    'tasks','tasks.snowflake_io',
-                                    'tasks', 'tasks.https_io'
-                                    'tasks', 'osc_io']),
+                                    'tasks','tasks.dynamics_io', 
+                                    'tasks', 'tasks.https_io']),
     include_package_data=True,
     install_requires=[],
     author="Enterprise Data Management",
