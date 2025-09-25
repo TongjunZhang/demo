@@ -1,6 +1,6 @@
 pipeline:
-  name: cci_eap_glue_marketo
-  identifier: cci_eap_glue_marketo
+  name: cci-eap-edmdq-marketo
+  identifier: cci-eap-edmdq-marketo
   description: ci for the cdp pipeline check routine
   tags: {}
   template:
@@ -10,7 +10,7 @@ pipeline:
         ci:
           codebase:
             connectorRef: account.dnd_engineering_enterprise_github_connector
-            repoName: cci_eap_glue_marketo
+            repoName: cci-eap-edmdq-marketo
             build: <+input>
       stages:
         - stage:
@@ -37,20 +37,20 @@ pipeline:
                 value: azure-devops-ci-storage-xm5r8j75nw
               - name: GLUE_BUCKET_PATH
                 type: String
-                value: cci_eap_glue_marketo
+                value: cci-eap-edmdq-marketo
               - name: CUSTOM_PACKAGE_PREFIX
                 type: String
-                value: cci_eap_glue_marketo
+                value: cci-eap-edmdq-marketo
       variables:
         - name: project_name
           type: String
-          value: cci_eap_glue_marketo
+          value: cci-eap-edmdq-marketo
         - name: upload_bucket
           type: String
           value: azure-devops-ci-storage-xm5r8j75nw
         - name: image_name
           type: String
-          value: cci_eap_glue_marketo
+          value: cci-eap-edmdq-marketo
         - name: tag_value
           type: String
           value: <+pipeline.executionId>
