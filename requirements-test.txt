@@ -4,4 +4,4 @@ snowflake
 urllib3
 botocore
 unittest
-pytest
+pyspark==3.5.4

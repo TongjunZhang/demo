@@ -4,7 +4,6 @@ from tasks.snowflake_io import snowflake_io
 import pytest
 
 
-
 class Testsnowflake_io(unittest.TestCase):
     @patch('tasks.snowflake_io.boto3.session.Session')
     def setUp(self, mock_session):
