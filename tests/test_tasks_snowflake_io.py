@@ -78,9 +78,9 @@ class Testsnowflake_io(unittest.TestCase):
 
         self.assertIsNotNone(access_token)
 
-    @patch('tasks.dynamics_io.HttpsIo.http_request')
-    @patch('tasks.dynamics_io.snowflake_io.set_headers')
-    @patch('tasks.dynamics_io.SecretsManagerIO.get_secret')
+    @patch('tasks.snowflake_io.HttpsIo.http_request')
+    @patch('tasks.snowflake_io.set_headers')
+    @patch('tasks.snowflake_io.SecretsManagerIO.get_secret')
     def test_transfer_entity_data(self, mock_get_secret, mock_set_headers, mock_http_request):
         
         # Mock the get_secret method
