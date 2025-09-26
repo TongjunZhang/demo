@@ -39,6 +39,7 @@ COPY ./MANIFEST.in /home/glue_user/workspace/
 COPY ./requirements.txt requirements.txt
 COPY tasks /home/glue_user/workspace/tasks/
 RUN pip3 install --no-cache-dir build
+RUN pip3 install wheel
 RUN python3 -m build 
 RUN python3 setup.py bdist_wheel
 RUN pip3 wheel -r requirements.txt -w dist/
