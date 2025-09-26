@@ -1,6 +1,6 @@
-boto3
-moto
 requests
+boto3
+snowflake
 urllib3
-unitest
+botocore
 pytest
