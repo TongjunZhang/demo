@@ -3,4 +3,4 @@ boto3
 snowflake
 urllib3
 botocore
-pyspark==3.5.4
+
