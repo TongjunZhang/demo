@@ -1,4 +1,4 @@
-FROM amazon/aws-glue-libs:glue_libs_4.0.0_image_01 as base
+FROM nexus.crowncastle.com:8843/base-image-aws-glue-libs-5:latest AS base
 ENV AWS_REGION=us-east-2
 ENV AWS_ACCESS_KEY_ID=dummy
 ENV AWS_SECRET_ACCESS_KEY=dummy
