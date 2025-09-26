@@ -44,7 +44,7 @@ class Argunents:
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
         self.arg_parse.add_argument('--region_name', help="region to use", type=str, required=False, default="us-east-2")
         self.arg_parse.add_argument('--source', help="source of the data", type=str, required=False, default="zoomInfo")
-        self.arg_parse.add_argument('--job_name', help="name of the glue job", type=str, required=False, default="glue_marketo_snowflake_to_osc")
+        self.arg_parse.add_argument('--job_name', help="name of the glue job", type=str, required=False, default="glue_cci_eap_edmdq_marketo")
         self.arg_parse.add_argument('--max_workers', help="max workers for threading", type=int, required=False, default=5)
 
     def set_args(self):

@@ -31,14 +31,6 @@ class testosc_io(unittest.TestCase):
         # Create an instance of osc_io with the mocked logger and argparse namespace
         self.osc_io_instance = osc_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
 
-    # def test_add_filter_with_watermark(self):
-    #     url = "https://example.com/api/data"
-    #     watermark = "2023-01-01T00:00:00Z"
-    #     expected_url = f"{url}?$filter=modifiedon gt {watermark}"
-    #
-    #     result = self.dynamics_io_instance.add_filter(url, watermark)
-    #     self.assertEqual(result, expected_url)
-
     @patch('tasks.osc_io.SecretsManagerIO.get_secret')
     def test_set_headers(self, mock_get_secret):
         # Mock the logger
