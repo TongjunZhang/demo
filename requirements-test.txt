@@ -3,3 +3,5 @@ moto
 requests
 urllib3
 unitest
+pytest
+
