@@ -3,6 +3,7 @@
 import boto3
 from typing import Dict
 from botocore.exceptions import ClientError
+from boto3.dynamodb.conditions import Key, Attr
 import logging
 import json
 import argparse
@@ -82,42 +83,55 @@ class MarketoETL:
             complete_results.sort(key=lambda x: x[scan_column_forward], reverse=True)
         return complete_results
 
-    def put_item(self, row) -> str:
+    # def put_item(self, row) -> str:
+    #     """
+    #     Create a payload from a ZoomInfo row.
+    #
+    #     Args:
+    #         row: List containing company data.
+    #
+    #     Returns:
+    #         str: JSON payload for the item.
+    #     """
+    #     address1_city = row[6]
+    #     address1_line1 = row[5]
+    #     address1_postalcode = row[7]
+    #     cci_address1stateid_value = row[3]
+    #     name = row[4]
+    #     websiteurl = row[1]
+    #
+    #     payload = json.dumps({
+    #         "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
+    #         "name": name,
+    #         "cci_businesssector": "123",
+    #         "address1_city": address1_city,
+    #         "address1_line1": address1_line1,
+    #         "address1_postalcode": address1_postalcode,
+    #         "address1_stateorprovince": cci_address1stateid_value,
+    #         "statecode": 0,
+    #         "telephone1": "1231231232",
+    #         "websiteurl": websiteurl,
+    #         "address1_composite": "123 Canonsburg 15317"
+    #     })
+    #     return payload
+
+    def set_table(self, table_name: str):
         """
-        Create a payload from a ZoomInfo row.
+        Set the dynamodb table
 
         Args:
-            row: List containing company data.
+            table_name (str): Dyanmodb table name
 
         Returns:
-            str: JSON payload for the item.
+            _type_: Dynamodb table object
         """
-        address1_city = row[6]
-        address1_line1 = row[5]
-        address1_postalcode = row[7]
-        cci_address1stateid_value = row[3]
-        name = row[4]
-        websiteurl = row[1]
-
-        payload = json.dumps({
-            "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
-            "name": name,
-            "cci_businesssector": "123",
-            "address1_city": address1_city,
-            "address1_line1": address1_line1,
-            "address1_postalcode": address1_postalcode,
-            "address1_stateorprovince": cci_address1stateid_value,
-            "statecode": 0,
-            "telephone1": "1231231232",
-            "websiteurl": websiteurl,
-            "address1_composite": "123 Canonsburg 15317"
-        })
-        return payload
+        self.logger.info(f"Setting osc account {table_name}")
+        return self.resource.Table(table_name)
 
     def get_latest_watermark(
         self,
         pipeline_id: str,
-        osc_account: str = None
+        table_name: str = None
     ) -> str:
         """
         Get the latest watermark for the pipeline.
@@ -129,10 +143,25 @@ class MarketoETL:
         Returns:
             str: The latest watermark.
         """
-        default_watermark = "1969-01-01T00:00:00Z"
-        # The actual logic for fetching watermark from DynamoDB is commented out.
-        # Currently, it appends osc_account to the default watermark.
-        watermark = default_watermark + (osc_account if osc_account else "")
+        default_watermark = "2025-01-01T00:00:00Z"
+        try:
+            table = self.set_table(table_name)
+            self.logger.info('searching by partition key for pipeline_id: %s' % pipeline_id)
+            items = table.query(KeyConditionExpression=Key('pipelineId').eq(pipeline_id),
+                                ScanIndexForward=False)
+            self.logger.info('pipeline_id: %s - count: %s' % (pipeline_id, items.get('Count', 0)))
+            items = items.get('Items', [])
+            if items and "dynamicObjects" in items[0]:
+                watermark = items[0].get('dynamicObjects', {}).get('cdc_rpl_last_update_date', None)
+                if not watermark:
+                    self.logger.info('No watermark found in Dynamodb, setting watermark for pipeline %s to default %s' % (pipeline_id, default_watermark))
+                    watermark= default_watermark
+            else:
+                self.logger.info('No results from Dynamodb found, setting watermark for pipeline %s to default %s' % (pipeline_id, default_watermark))
+                watermark = default_watermark
+        except Exception as e:
+            self.logger.error('error in getting watermark for pipeline %s: %s, using default %s' % (pipeline_id, e, default_watermark))
+            watermark = default_watermark
         self.logger.info('watermark for pipeline %s is %s' % (pipeline_id, watermark))
         return watermark
 

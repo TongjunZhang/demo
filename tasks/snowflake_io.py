@@ -7,6 +7,7 @@ import boto3
 import argparse
 import snowflake.connector
 from tasks.osc_io import osc_io
+import json
 
 EXECUTION_STAGE = 0
 EXECUTION_STATE = 1
@@ -41,23 +42,23 @@ class snowflake_io:
         self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_nonprod_DQ_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
-    def set_headers(self, access_token: str) -> dict:
-        """
-        Set headers for Snowflake API requests.
-
-        Args:
-            access_token (str): Bearer token for authentication.
-
-        Returns:
-            dict: Headers for the request.
-        """
-        return {
-            'Authorization': f'Bearer {access_token}',
-            'OData-MaxVersion': '4.0',
-            'OData-Version': '4.0',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json; charset=utf-8'
-        }
+    # def set_headers(self, access_token: str) -> dict:
+    #     """
+    #     Set headers for Snowflake API requests.
+    #
+    #     Args:
+    #         access_token (str): Bearer token for authentication.
+    #
+    #     Returns:
+    #         dict: Headers for the request.
+    #     """
+    #     return {
+    #         'Authorization': f'Bearer {access_token}',
+    #         'OData-MaxVersion': '4.0',
+    #         'OData-Version': '4.0',
+    #         'Accept': 'application/json',
+    #         'Content-Type': 'application/json; charset=utf-8'
+    #     }
 
     def get_access_token(
         self,
@@ -121,10 +122,10 @@ class snowflake_io:
 
     def transfer_entity_data(
         self,
-        watermark: str = None,
-        secret_data: dict = None,
-        access_token: str = None,
-        source: str = 'snowflake'
+        # watermark: str = None,
+        secret_data: dict = None
+        # header: str = None
+        # source: str = 'snowflake'
     ):
         """
         Fetch entity data from Snowflake and process it for OSC.
@@ -148,8 +149,27 @@ class snowflake_io:
             oscaccesstoken = None
             for row in rows:
                 # Create payload and send to OSC
-                inpayload = MarketoETL.put_item(row)
-                rt = osc_io.create_OSC_Account(inpayload, oscaccesstoken)
+                address1_city = row[6]
+                address1_line1 = row[5]
+                address1_postalcode = row[7]
+                cci_address1stateid_value = row[3]
+                name = row[4]
+                websiteurl = row[1]
+
+                payload = json.dumps({
+                    "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
+                    "name": name,
+                    "cci_businesssector": "123",
+                    "address1_city": address1_city,
+                    "address1_line1": address1_line1,
+                    "address1_postalcode": address1_postalcode,
+                    "address1_stateorprovince": cci_address1stateid_value,
+                    "statecode": 0,
+                    "telephone1": "1231231232",
+                    "websiteurl": websiteurl,
+                    "address1_composite": "123 Canonsburg 15317"
+                })
+                rt = osc_io.create_OSC_Account(payload, oscaccesstoken)
                 accountnumber = rt.get('accountnumber')
                 # Update Snowflake table with new account number
                 sqlstr = (
@@ -165,4 +185,4 @@ class snowflake_io:
                 self.logger.info("logging info: Account number:" + f'{accountnumber}')
         except Exception as e:
             self.logger.error(f"Error getting execution data from ZoomInfo table: {e}")
-            return
+
