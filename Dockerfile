@@ -45,6 +45,6 @@ RUN python3 setup.py bdist_wheel
 RUN pip3 wheel -r requirements.txt -w dist/
 RUN cp -a dist/*.whl volume/distributions/
 RUN chmod -R 777 volume/
-COPY --from=jars target/dependency/*.jar volume/distributions/
+# COPY --from=jars target/dependency/*.jar volume/distributions/ -- TODO: add later
 USER root
 ENTRYPOINT ["/home/glue_user/workspace/copy-volume.sh"]
