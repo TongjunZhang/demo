@@ -28,36 +28,6 @@ class TestMarketoETL(unittest.TestCase):
         self.MarketoETL_io = MarketoETL(args=self.args, boto3_session=self.mock_session)
         # self.secret_data = SecretsManagerIO.get_secret(self.args.secret_name)
 
-    # def test_get_items_single_key(self):
-    #     # Setup mock response
-    #     mock_items = {'Items': [{'id': '1', 'name': 'test'}], 'LastEvaluatedKey': None}
-    #     self.mock_table.scan.return_value = mock_items
-        
-    #     # Test
-    #     result = self.MarketoETL_io.get_items('test_table', {'id': '1'})
-        
-    #     # Verify
-    #     self.assertEqual(result, [{'id': '1', 'name': 'test'}])
-    #     self.mock_table.scan.assert_called_once()
-
-    # def test_get_items_multiple_keys(self):
-    #     # Setup mock response
-    #     mock_items = {'Items': [{'id': '1', 'status': 'active', 'name': 'test'}], 'LastEvaluatedKey': None}
-    #     self.mock_table.scan.return_value = mock_items
-        
-    #     # Test
-    #     result = self.MarketoETL_io.get_items('test_table', {'id': '1', 'status': 'active'})
-        
-    #     # Verify
-    #     self.assertEqual(result, [{'id': '1', 'status': 'active', 'name': 'test'}])        
-
-    # def test_set_table(self):
-    #     """Test setting DynamoDB table"""
-    #     with patch('tasks.aws_api_io.boto3.resource', return_value=self.mock_resource):
-    #         table = self.MarketoETL_io.set_table("mock_conf_table")
-    #         assert table == self.mock_table
-    #         self.mock_resource.Table.assert_called_once_with("mock_conf_table")
-
     # @patch('tasks.snowflake_io.transfer_entity_data')
     #@patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_put_item(self):
@@ -110,35 +80,6 @@ class TestMarketoETL(unittest.TestCase):
         self.mock_logger.info.assert_any_call(
             'put item from Snowflake: %s' % (test_item[0])
         )
-
-    # def test_get_latest_watermark(self):
-    #     """Test successful watermark retrieval"""
-    #     # Setup test data
-    #     pipeline_id = "test_pipeline"
-    #     table_name = "test_table"
-    #     expected_watermark = "2025-01-01T00:00:00Z"
-        
-    #     # Mock query response
-    #     mock_response = {
-    #         'Items': [{
-    #             'pipelineId': pipeline_id,
-    #             'dynamicObjects': {
-    #                 'cdc_rpl_last_update_date': expected_watermark
-    #             }
-    #         }],
-    #         'Count': 1
-    #     }
-    #     self.mock_table.query.return_value = mock_response
-        
-    #     # Test
-    #     result = self.MarketoETL_io.get_latest_watermark(pipeline_id, table_name)
-        
-    #     # Verify
-    #     self.assertEqual(result, expected_watermark)
-    #     self.mock_table.query.assert_called_once_with(
-    #         KeyConditionExpression=Key('pipelineId').eq(pipeline_id),
-    #         ScanIndexForward=False
-    #     )
 
 
 class TestSecretsManagerIO:

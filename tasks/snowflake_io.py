@@ -42,24 +42,6 @@ class snowflake_io:
         self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
-    # def set_headers(self, access_token: str) -> dict:
-    #     """
-    #     Set headers for Snowflake API requests.
-    
-    #     Args:
-    #         access_token (str): Bearer token for authentication.
-    
-    #     Returns:
-    #         dict: Headers for the request.
-    #     """
-    #     return {
-    #         'Authorization': f'Bearer {access_token}',
-    #         'OData-MaxVersion': '4.0',
-    #         'OData-Version': '4.0',
-    #         'Accept': 'application/json',
-    #         'Content-Type': 'application/json; charset=utf-8'
-    #     }
-
     def get_snowflake_access_token(
         self,
         secret_data: dict,

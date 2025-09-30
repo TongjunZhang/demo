@@ -33,34 +33,6 @@ class testosc_io(unittest.TestCase):
         self.osc_io_instance = osc_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
 
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    def test_set_headers(self, mock_get_secret):
-        # Mock the logger
-        mock_get_secret.return_value = {
-            "grant_type": "client_credentials",
-            "client_id": "mock_client_id",
-            "client_secret": "mock_client_secret",
-            "base_url": "https://mock_env.api.crm.dynamics.com"   #todo: change
-        }
-        
-        # Call the set_headers method
-        headers = self.osc_io_instance.set_headers("mock_access_token")
-        self.assertIsNotNone(headers)
-
-    # # @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    # def test_set_headers(self, mock_get_secret):
-    #     # Mock the logger
-    #     mock_get_secret.return_value = {
-    #         "grant_type": "client_credentials",
-    #         "client_id": "mock_client_id",
-    #         "client_secret": "mock_client_secret",
-    #         "base_url": "https://mock_env.api.crm.dynamics.com"  # todo:change
-    #     }
-    #
-    #     # Call the set_headers method
-    #     headers = self.osc_io_instance.set_headers("mock_access_token")
-    #     self.assertIsNotNone(headers)
-
-    @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_get_osc_access_token(self,  mock_get_secret):
         # Mock the logger
        
@@ -82,44 +54,6 @@ class testosc_io(unittest.TestCase):
 
         self.assertIsNotNone(osc_access_token)
 
-    # @patch('tasks.osc_io.HttpsIo.http_request')
-    # @patch('tasks.osc_io.set_headers')
-    # @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    # def test_get_entity_data(self, mock_get_secret, mock_set_headers, mock_http_request):
-    #
-    #     # Mock the get_secret method
-    #     mock_get_secret.return_value = {
-    #         "grant_type": "client_credentials",
-    #         "client_id": "mock_client_id",
-    #         "client_secret": "mock_client_secret",
-    #         "base_url": "https://mock_env.api.crm.dynamics.com"
-    #     }
-    #
-    #     # Mock the set_headers method
-    #     mock_set_headers.return_value = {
-    #         'Authorization': 'Bearer mock_access_token',
-    #         'Content-Type': 'application/json'
-    #     }
-    #
-    #     # Mock the response from the http_request call
-    #     mock_response = MagicMock()
-    #     mock_response.status_code = 200
-    #     mock_response.raise_for_status.return_value = None
-    #     mock_response.json.return_value = {
-    #         "value": [{"id": "1", "name": "Entity1"}, {"id": "2", "name": "Entity2"}],
-    #         "@odata.nextLink": None
-    #     }
-    #     mock_http_request.return_value = (True, mock_response)
-    #     # Call the get_entity_data method
-    #     watermark = "2023-01-01T00:00:00Z"
-    #     secret_data = mock_get_secret.return_value
-    #     source = "osc_ic"
-    #
-    #     execution_max_watermark, s3_key = self.osc_io_instance.create_OSC_Account(watermark, secret_data, self.access_token, source)
-    #     # Verify the result
-    #     self.assertIsNotNone(execution_max_watermark)
-    #     self.assertIsNotNone(s3_key)
-        
 
         
 if __name__ == "__main__":

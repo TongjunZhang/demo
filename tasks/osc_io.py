@@ -76,24 +76,6 @@ class osc_io:
             my_access_token = response.json().get('access_token', "")
         return my_access_token
 
-    def set_headers(self, access_token: str) -> dict:
-        """
-        Set headers for OSC API requests.
-
-        Args:
-            access_token (str): Bearer token for authentication.
-
-        Returns:
-            dict: Headers for the request.
-        """
-        return {
-            'Authorization': f'Bearer {access_token}',
-            'OData-MaxVersion': '4.0',
-            'OData-Version': '4.0',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-
     def create_OSC_Account(self, payload_data: str, access_token: str) -> dict:
         """
         Create an account in OSC using the provided payload and access token.
