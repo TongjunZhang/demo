@@ -39,7 +39,7 @@ class Argunents:
         self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
         self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=True)
-        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
+        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True, default="DM_Snowflake_OSC_nonprod_DQ_ETL")
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
         self.arg_parse.add_argument('--region_name', help="region to use", type=str, required=False, default="us-east-2")
@@ -89,16 +89,20 @@ def process_pipeline(
     logger.info('Step: Get data from zoominfo from snowflake')
     zoomInfo_rows = None
     try:
+        snowfalke_connect = snowflake_io(
+            args=args_u,
+            logger=logger,
+            pipeline_id=pipeline_id  #,
+            # execution_id=execution_id
+        ).return_connection(secret_data)
         # Fetch entity data from Snowflake
         zoomInfo_rows = snowflake_io(
             args=args_u,
             logger=logger,
-            pipeline_id=pipeline_id,
-            execution_id=execution_id
+            pipeline_id=pipeline_id  #,
+#            execution_id=execution_id
         ).transfer_entity_data(
-            watermark=watermark_value,
-            secret_data=secret_data,
-            source=args_u.source
+            snowfalke_connect
         )
     except Exception as e:
         logger.error(f"Error getting data from snowflake: {e}")
@@ -123,17 +127,27 @@ def process_pipeline(
         oscresponse = None
         try:
             # Send payload data to OSC
+            osc_accesstoken = osc_io.get_access_token(secret_data)
             oscresponse = osc_io(
                 args=args_u,
                 logger=logger,
-                pipeline_id=pipeline_id,
-                execution_id=execution_id
+                pipeline_id=pipeline_id
             ).create_OSC_Account(
-                payload_data=payload
+                payload_data=payload,
+                access_token=osc_accesstoken
             )
         except Exception as e:
             logger.error(f"Error putting payload data to OSC: {e}")
             return
+
+        if not oscresponse.get('accountnumber'):
+            try:
+                snowflake_io.update_osc_account(snowfalke_connect,oscresponse.get('accountnumber'), row[0])
+                snowfalke_connect.close()
+            except Exception as e:
+                logger.error(f"Error updating OSC account in Snowflake: {e}")
+                return
+
 
 # Main function to orchestrate pipeline processing
 def main():

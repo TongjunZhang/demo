@@ -12,7 +12,7 @@ import argparse
 class MarketoETL:
     def __init__(
         self,
-        args: argparse.Namespace = None,
+        args: argparse.Namespace,
         boto3_session: boto3.session.Session = None,
         logger: logging.Logger = None
     ):
@@ -32,8 +32,8 @@ class MarketoETL:
             service_name='secretsmanager',
             region_name=args.region_name
         )
-        # Resource for DynamoDB (table name is hardcoded)
-        self.resource = self.boto3_session.resource('DM_Snowflake_OSC_nonprod_DQ_ETL')
+        # Resource for marketoETL
+        self.resource = self.boto3_session.resource('secretsmanager')
         self.logger = logging.getLogger() if logger is None else logger
 
     def get_items(self,
@@ -83,37 +83,37 @@ class MarketoETL:
             complete_results.sort(key=lambda x: x[scan_column_forward], reverse=True)
         return complete_results
 
-    # def put_item(self, row) -> str:
-    #     """
-    #     Create a payload from a ZoomInfo row.
-    #
-    #     Args:
-    #         row: List containing company data.
-    #
-    #     Returns:
-    #         str: JSON payload for the item.
-    #     """
-    #     address1_city = row[6]
-    #     address1_line1 = row[5]
-    #     address1_postalcode = row[7]
-    #     cci_address1stateid_value = row[3]
-    #     name = row[4]
-    #     websiteurl = row[1]
-    #
-    #     payload = json.dumps({
-    #         "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
-    #         "name": name,
-    #         "cci_businesssector": "123",
-    #         "address1_city": address1_city,
-    #         "address1_line1": address1_line1,
-    #         "address1_postalcode": address1_postalcode,
-    #         "address1_stateorprovince": cci_address1stateid_value,
-    #         "statecode": 0,
-    #         "telephone1": "1231231232",
-    #         "websiteurl": websiteurl,
-    #         "address1_composite": "123 Canonsburg 15317"
-    #     })
-    #     return payload
+    def put_item(self, row:list = None) -> str:
+        """
+        Create a payload from a ZoomInfo row.
+
+        Args:
+            row: List containing company data.
+
+        Returns:
+            str: JSON payload for the item.
+        """
+        address1_city = row[6]
+        address1_line1 = row[5]
+        address1_postalcode = row[7]
+        cci_address1stateid_value = row[3]
+        name = row[4]
+        websiteurl = row[1]
+
+        payload = json.dumps({
+            "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
+            "name": name,
+            "cci_businesssector": "123",
+            "address1_city": address1_city,
+            "address1_line1": address1_line1,
+            "address1_postalcode": address1_postalcode,
+            "address1_stateorprovince": cci_address1stateid_value,
+            "statecode": 0,
+            "telephone1": "1231231232",
+            "websiteurl": websiteurl,
+            "address1_composite": "123 Canonsburg 15317"
+        })
+        return payload
 
     def set_table(self, table_name: str):
         """
@@ -183,7 +183,7 @@ class SecretsManagerIO:
         self.client = self.boto3_session.client('secretsmanager')
         self.logger = logging.getLogger() if logger is None else logger
 
-    def get_secret(self, secret_name: str) -> Dict:
+    def get_secret(self, secret_name: str = None) -> Dict:
         """
         Retrieve a secret from AWS Secrets Manager.
 
@@ -201,4 +201,4 @@ class SecretsManagerIO:
             return secret
         except ClientError as e:
             self.logger.error(f"Failed to fetch secret for {secret_name}: {e}")
-            return e.response
+            return None

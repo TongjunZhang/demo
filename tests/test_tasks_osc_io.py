@@ -6,7 +6,8 @@ from tasks.osc_io import osc_io
 
 
 class testosc_io(unittest.TestCase):
-    @patch('tasks.aws_api_io.boto3.session.Session')
+    @patch('tasks.osc_io.boto3.session.Session')
+    # @patch('tasks.osc_io.logging.getLogger')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
         self.mock_args = MagicMock()
@@ -17,13 +18,13 @@ class testosc_io(unittest.TestCase):
         self.mock_args.secret_name = "mock_secret_name"
         self.mock_args.pipelineIds = "mock_pipelineIds"
         self.mock_args.job_stage = "mock_job_stage"
-        self.mock_args.region_name = "us-west-2"
+        self.mock_args.region_name = "us-east-2"
         self.mock_args.source = "mock_source"
         self.mock_args.job_name = "mock_job_name"
         self.mock_args.max_workers = 10
         self.pipeline_id = "mock_pipeline_id"
         self.mock_session = mock_session
-        self.access_token = "mock_access_token"
+        self.osc_access_token = "mock_access_token"
 
         # Mock the logger
         self.mock_logger = MagicMock()
@@ -59,14 +60,13 @@ class testosc_io(unittest.TestCase):
     #     headers = self.osc_io_instance.set_headers("mock_access_token")
     #     self.assertIsNotNone(headers)
 
-    @patch('tasks.https_io.HttpsIo.http_request')
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    def test_get_access_token(self,  mock_get_secret, mock_requests_post):
+    def test_get_osc_access_token(self,  mock_get_secret):
         # Mock the logger
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "grant_type": "client_credentials",
+            "grant_type": "mock_client_credentials",
             "client_id": "mock_client_id",
             "client_secret": "mock_client_secret",
             "base_url": "https://mock_env.api.crm.dynamics.com"  #todo:change
@@ -76,12 +76,11 @@ class testosc_io(unittest.TestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"access_token": "mock_access_token"}
-        mock_requests_post.return_value = True, mock_response
-        
-        # Call the get_access_token method
-        access_token = self.osc_io_instance.get_access_token(secret_data=mock_get_secret(), access_token=self.access_token)
 
-        self.assertIsNotNone(access_token)
+        # Call the get_osc_access_token method
+        osc_access_token = self.osc_io_instance.get_osc_access_token(secret_data=mock_get_secret(), access_token=self.osc_access_token)
+
+        self.assertIsNotNone(osc_access_token)
 
     # @patch('tasks.osc_io.HttpsIo.http_request')
     # @patch('tasks.osc_io.set_headers')

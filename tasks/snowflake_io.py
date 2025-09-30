@@ -18,7 +18,7 @@ class snowflake_io:
     """
     def __init__(
         self,
-        args: argparse.Namespace = None,
+        args: argparse.Namespace,
         logger: logging.Logger = None,
         boto3_session: boto3.session.Session = None,
         pipeline_id: str = None,
@@ -39,7 +39,7 @@ class snowflake_io:
         self.args = args
         self.pipeline_id = pipeline_id
         # Remove prefix from pipeline_id for processing
-        self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_nonprod_DQ_', '') if self.pipeline_id else None
+        self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
     # def set_headers(self, access_token: str) -> dict:
@@ -60,7 +60,7 @@ class snowflake_io:
     #         'Content-Type': 'application/json; charset=utf-8'
     #     }
 
-    def get_access_token(
+    def get_snowflake_access_token(
         self,
         secret_data: dict,
         access_token: str = None
@@ -94,7 +94,8 @@ class snowflake_io:
                 http_data=payload
             )
             self.logger.info('Access token being requested / replaced')
-            my_access_token = response.json().get('access_token', "")
+            response_value = json.loads(response)
+            my_access_token = response_value.get('access_token', "")
         return my_access_token
 
     def return_connection(self, secret_data) -> snowflake.connector.connection.SnowflakeConnection:
@@ -107,6 +108,8 @@ class snowflake_io:
         Returns:
             SnowflakeConnection: Active Snowflake connection.
         """
+        access_token = self.get_snowflake_access_token(secret_data=secret_data)
+
         ctx = snowflake.connector.connect(
             user='0baab986-1a68-4191-953b-147d8fc0c71c',     # Replace with secret_data["DM_Snowflake_User_ID"]
             role="DATA_MANAGEMENT_RO_ROLE",                  # Replace with secret_data['DM_Snowflake_role']
@@ -116,17 +119,14 @@ class snowflake_io:
             schema="DATA_MANAGEMENT",                        # Replace with secret_data['DM_Snowflake_schema']
             autocommit=True,                                 # Replace with secret_data['DM_Snowflake_autocommit']
             authenticator="OAuth",                           # Replace with secret_data['DM_Snowflake_authenticator']
-            token=self.get_access_token(self.get_secret(self.args.secret_name))
+            token=access_token
         )
         return ctx
 
     def transfer_entity_data(
         self,
-        # watermark: str = None,
-        secret_data: dict = None
-        # header: str = None
-        # source: str = 'snowflake'
-    ):
+        connect: snowflake.connector.connection.SnowflakeConnection = None
+    ) -> list:
         """
         Fetch entity data from Snowflake and process it for OSC.
 
@@ -139,50 +139,26 @@ class snowflake_io:
         Returns:
             None
         """
-        connect = self.return_connection(secret_data)
         datacursor = connect.cursor()
         rows = None
         try:
             # Query for rows where ZOOMINFO_COMPANY_ID is NULL
             datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ZOOMINFO_COMPANY_ID IS NULL")
             rows = datacursor.fetchall()
-            oscaccesstoken = None
-            for row in rows:
-                # Create payload and send to OSC
-                address1_city = row[6]
-                address1_line1 = row[5]
-                address1_postalcode = row[7]
-                cci_address1stateid_value = row[3]
-                name = row[4]
-                websiteurl = row[1]
-
-                payload = json.dumps({
-                    "ownerid@odata.bind": "/systemusers(93b90868-8652-ea11-a81a-000d3a579b7d)",
-                    "name": name,
-                    "cci_businesssector": "123",
-                    "address1_city": address1_city,
-                    "address1_line1": address1_line1,
-                    "address1_postalcode": address1_postalcode,
-                    "address1_stateorprovince": cci_address1stateid_value,
-                    "statecode": 0,
-                    "telephone1": "1231231232",
-                    "websiteurl": websiteurl,
-                    "address1_composite": "123 Canonsburg 15317"
-                })
-                rt = osc_io.create_OSC_Account(payload, oscaccesstoken)
-                accountnumber = rt.get('accountnumber')
-                # Update Snowflake table with new account number
-                sqlstr = (
-                    "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" +
-                    f'{accountnumber}' +
-                    "' WHERE ZOOMINFO_COMPANY_ID = '" +
-                    f'{row[0]}' +
-                    "'"
-                )
-                datacursor.execute(sqlstr)
-                datacursor.execute("COMMIT")
-                print(accountnumber)
-                self.logger.info("logging info: Account number:" + f'{accountnumber}')
+            datacursor.close()
         except Exception as e:
             self.logger.error(f"Error getting execution data from ZoomInfo table: {e}")
+        return rows
 
+    def update_osc_account(self,
+        # watermark: str = None,
+        connect: snowflake.connector.connection.SnowflakeConnection = None,
+        accountnumber: str = None,
+        zoominfo_company_id:str = None
+        ):
+        datacursor = connect.cursor()
+        sqlstr = "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" + f'{accountnumber}' + "' WHERE ZOOMINFO_COMPANY_ID = '" + f'{zoominfo_company_id}' + "'"
+        datacursor.execute(sqlstr)
+        datacursor.execute("COMMIT")
+        datacursor.close()
+        print(accountnumber)

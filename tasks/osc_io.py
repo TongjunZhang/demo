@@ -38,7 +38,7 @@ class osc_io:
         self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_nonprod_DQ_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
-    def get_access_token(
+    def get_osc_access_token(
             self,
             secret_data: dict,
             access_token: str = None

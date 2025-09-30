@@ -1,11 +1,12 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from tasks.snowflake_io import snowflake_io
+from unittest.mock import patch, MagicMock
 import pytest
 
 
 class Testsnowflake_io(unittest.TestCase):
-    @patch('tasks.aws_api_io.boto3.session.Session')
+    @patch('tasks.snowflake_io.boto3.session.Session')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
         self.mock_args = MagicMock()
@@ -16,13 +17,13 @@ class Testsnowflake_io(unittest.TestCase):
         self.mock_args.secret_name = "mock_secret_name"
         self.mock_args.pipelineIds = "mock_pipelineIds"
         self.mock_args.job_stage = "mock_job_stage"
-        self.mock_args.region_name = "us-west-2"
+        self.mock_args.region_name = "us-east-2"
         self.mock_args.source = "mock_source"
         self.mock_args.job_name = "mock_job_name"
         self.mock_args.max_workers = 10
         self.pipeline_id = "mock_pipeline_id"
         self.mock_session = mock_session
-        self.access_token = "mock_access_token"
+        self.snowflake_access_token = "mock_access_token"
 
         # Mock the logger
         self.mock_logger = MagicMock()
@@ -53,14 +54,14 @@ class Testsnowflake_io(unittest.TestCase):
     #     self.assertIsNotNone(headers)
 
 
-    @patch('tasks.https_io.HttpsIo.http_request')
+
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    def test_get_access_token(self,  mock_get_secret, mock_requests_post):
+    def test_get_snowflake_access_token(self,  mock_get_secret):
         # Mock the logger
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "grant_type": "client_credentials",
+            "grant_type": "mock_client_credentials",
             "client_id": "mock_client_id",
             "client_secret": "mock_client_secret",
             "base_url": "https://mock_env.api.crm.dynamics.com"
@@ -70,24 +71,66 @@ class Testsnowflake_io(unittest.TestCase):
         mock_response = MagicMock()
         mock_response.status_code = 200
         mock_response.json.return_value = {"access_token": "mock_access_token"}
-        mock_requests_post.return_value = True, mock_response
+        # mock_requests_post.return_value = True, mock_response
         
-        # Call the get_access_token method
-        access_token = self.snowflake_io_instance.get_access_token(secret_data=mock_get_secret(), access_token=self.access_token)
-
-        self.assertIsNotNone(access_token)
+        # Call the get_snowflake_access_token method
+        snowflake_access_token = self.snowflake_io_instance.get_snowflake_access_token(secret_data=mock_get_secret(), access_token=self.snowflake_access_token)
+        self.assertIsNotNone(snowflake_access_token)
 
     # @patch('tasks.https_io.HttpsIo.http_request')
     # @patch('tasks.snowflake_io.set_headers')
-    @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    def test_transfer_entity_data(self, mock_get_secret):
-        
-        # Mock the get_secret method
-        self.assertIsNone(snowflake_io.transfer_entity_data(mock_get_secret))
-        
-        # Mock the set_headers method
+    def test_transfer_entity_data_returns_rows(self):
+        # Mock connection and cursor
+        mock_connect = MagicMock()
+        mock_cursor = MagicMock()
+        mock_rows = [('row1',), ('row2',)]
+        mock_cursor.fetchall.return_value = mock_rows
+        mock_connect.cursor.return_value = mock_cursor
+
+        # Call the method
+        result = self.snowflake_io_instance.transfer_entity_data(connect=mock_connect)
+
+        # Assertions
+        mock_connect.cursor.assert_called_once()
+        mock_cursor.execute.assert_called_once_with(
+            "SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ZOOMINFO_COMPANY_ID IS NULL"
+        )
+        mock_cursor.fetchall.assert_called_once()
+        mock_cursor.close.assert_called_once()
+        self.assertEqual(result, mock_rows)
+
+    def test_transfer_entity_data_exception(self):
+        mock_connect = MagicMock()
+        mock_cursor = MagicMock()
+        mock_cursor.execute.side_effect = Exception("DB error")
+        mock_connect.cursor.return_value = mock_cursor
+
+        result = self.snowflake_io_instance.transfer_entity_data(connect=mock_connect)
+
+        self.mock_logger.error.assert_called_once()
+        self.assertIsNone(result)
+
+    @patch('tasks.snowflake_io.snowflake.connector.connect')
+    def test_return_connection(self, mock_connect):
+        # Setup secret_data
+        secret_data = {
+            "DM_Snowflake_grant_type": "client_credentials",
+            "DM_Snowflake_client_ID": "client_id",
+            "DM_Snowflake_client_secret": "client_secret",
+            "DM_Snowflake_auth_scope": "scope",
+            "DM_Snowflake_token_url": "https://token.url"
+        }
+        # Mock access token
+        self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
+        # Mock connection object
+        mock_connection = MagicMock()
+        mock_connect.return_value = mock_connection
+
+        result = self.snowflake_io_instance.return_connection(secret_data)
+
+        mock_connect.assert_called_once()
+        self.assertEqual(result, mock_connection)
 
 
-        
 if __name__ == "__main__":
     unittest.main()        
