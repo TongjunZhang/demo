@@ -113,6 +113,9 @@ class MarketoETL:
             "websiteurl": websiteurl,
             "address1_composite": "123 Canonsburg 15317"
         })
+
+        self.logger.info('put item from Snowflake: %s' % (row[0]))
+
         return payload
 
     def set_table(self, table_name: str):

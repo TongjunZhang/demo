@@ -39,21 +39,19 @@ class Testsnowflake_io(unittest.TestCase):
         # result = self.snowflake_io_instance.add_filter(url, watermark)
         self.assertEqual(expected_url, expected_url)
 
-    # # @patch('tasks.snowflake_io.SecretsManagerIO.get_secret')
-    # def test_set_headers(self, mock_get_secret):
-    #     # Mock the logger
-    #     mock_get_secret.return_value = {
-    #         "grant_type": "client_credentials",
-    #         "client_id": "mock_client_id",
-    #         "client_secret": "mock_client_secret",
-    #         "base_url": "https://mock_env.api.crm.dynamics.com"     #todo:change
-    #     }
-    #
-    #     # Call the set_headers method
-    #     headers = self.snowflake_io_instance.set_headers("mock_access_token")
-    #     self.assertIsNotNone(headers)
-
-
+    # @patch('tasks.snowflake_io.SecretsManagerIO.get_secret')
+    def test_set_headers(self, mock_get_secret):
+        # Mock the logger
+        mock_get_secret.return_value = {
+            "grant_type": "client_credentials",
+            "client_id": "mock_client_id",
+            "client_secret": "mock_client_secret",
+            "base_url": "https://mock_env.api.crm.dynamics.com"     #todo:change
+        }
+    
+        # Call the set_headers method
+        headers = self.snowflake_io_instance.set_headers("mock_access_token")
+        self.assertIsNotNone(headers)
 
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_get_snowflake_access_token(self,  mock_get_secret):

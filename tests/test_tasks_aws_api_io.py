@@ -28,6 +28,36 @@ class TestMarketoETL(unittest.TestCase):
         self.MarketoETL_io = MarketoETL(args=self.args, boto3_session=self.mock_session)
         # self.secret_data = SecretsManagerIO.get_secret(self.args.secret_name)
 
+    def test_get_items_single_key(self):
+        # Setup mock response
+        mock_items = {'Items': [{'id': '1', 'name': 'test'}], 'LastEvaluatedKey': None}
+        self.mock_table.scan.return_value = mock_items
+        
+        # Test
+        result = self.MarketoETL_io.get_items('test_table', {'id': '1'})
+        
+        # Verify
+        self.assertEqual(result, [{'id': '1', 'name': 'test'}])
+        self.mock_table.scan.assert_called_once()
+
+    def test_get_items_multiple_keys(self):
+        # Setup mock response
+        mock_items = {'Items': [{'id': '1', 'status': 'active', 'name': 'test'}], 'LastEvaluatedKey': None}
+        self.mock_table.scan.return_value = mock_items
+        
+        # Test
+        result = self.MarketoETL_io.get_items('test_table', {'id': '1', 'status': 'active'})
+        
+        # Verify
+        self.assertEqual(result, [{'id': '1', 'status': 'active', 'name': 'test'}])        
+
+    def test_set_table(self):
+        """Test setting DynamoDB table"""
+        with patch('tasks.aws_api_io.boto3.resource', return_value=self.mock_resource):
+            table = self.MarketoETL_io.set_table("mock_conf_table")
+            assert table == self.mock_table
+            self.mock_resource.Table.assert_called_once_with("mock_conf_table")
+
     # @patch('tasks.snowflake_io.transfer_entity_data')
     #@patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_put_item(self):
@@ -62,23 +92,24 @@ class TestMarketoETL(unittest.TestCase):
         # Verify
         self.assertEqual(result, payload)
 
-    # def test_put_item_logs_info(self):
-    #     """Test that put_item logs the operation"""
-    #     # Setup test data
-    #     table_name = "test_table"
-    #     test_item = {"id": "123", "data": "test_data"}
-    #
-    #     # Replace the logger with our mock
-    #     self.dynamo_io.logger = self.mock_logger
-    #
-    #     # Call the method
-    #     self.dynamo_io.put_item(table_name, test_item)
-    #
-    #     # Verify logging calls
-    #     self.mock_logger.info.assert_any_call(f"Setting dynamodb table {table_name}")
-    #     self.mock_logger.info.assert_any_call(
-    #         'put item in dynamodb table: %s Item: %s' % (table_name, test_item)
-    #     )
+    def test_put_item_logs_info(self):
+        """Test that put_item logs the operation"""
+        # Setup test data
+        table_name = "test_table"
+        test_item = ["1327712089","www.axeelite.com", "9c871e84-3b65-ea11-a815-000d3a591fb8","cb6a9a3f-c65c-ea11-a811-000d3a579c41","Axe Elite","301 Market St","Canonsburg","15317"]
+
+    
+        # Replace the logger with our mock
+        self.MarketoETL_io.logger = self.mock_logger
+    
+        # Call the method
+        self.MarketoETL_io.put_item(test_item)
+    
+        # Verify logging calls
+        # self.mock_logger.info.assert_any_call(f"Setting dynamodb table {table_name}")
+        self.mock_logger.info.assert_any_call(
+            'put item from Snowflake: %s' % (test_item[0])
+        )
 
     def test_get_latest_watermark(self):
         """Test successful watermark retrieval"""
