@@ -45,10 +45,10 @@ class snowflake_io:
     # def set_headers(self, access_token: str) -> dict:
     #     """
     #     Set headers for Snowflake API requests.
-    #
+    
     #     Args:
     #         access_token (str): Bearer token for authentication.
-    #
+    
     #     Returns:
     #         dict: Headers for the request.
     #     """
