@@ -2,7 +2,7 @@ import unittest
 from unittest.mock import patch, MagicMock
 from tasks.snowflake_io import snowflake_io
 from unittest.mock import patch, MagicMock
-import pytest
+# import pytest
 
 
 class Testsnowflake_io(unittest.TestCase):

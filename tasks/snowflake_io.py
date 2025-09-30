@@ -1,12 +1,12 @@
 # tasks/snowflake_io.py
 
 from tasks.https_io import HttpsIo
-from tasks.aws_api_io import SecretsManagerIO, MarketoETL
+# from tasks.aws_api_io import SecretsManagerIO, MarketoETL
 import logging
 import boto3
 import argparse
 import snowflake.connector
-from tasks.osc_io import osc_io
+# from tasks.osc_io import osc_io
 import json
 
 EXECUTION_STAGE = 0
