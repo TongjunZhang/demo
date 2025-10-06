@@ -3,5 +3,6 @@ boto3
 snowflake
 urllib3
 botocore
+datetime
 pytest-cov==5.0.0
 moto==4.2.13

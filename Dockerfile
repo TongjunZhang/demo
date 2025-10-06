@@ -16,6 +16,7 @@ RUN ["chmod", "+x", "/home/glue_user/workspace/copy-volume.sh"]
 USER glue_user
 
 FROM base as test-local
+COPY ./tasks /home/glue_user/workspace/tasks/
 COPY ./tests /home/glue_user/workspace/tests/
 COPY ./requirements-test.txt requirements-test.txt
 RUN pip3 install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org --no-cache-dir --upgrade -r requirements-test.txt
