@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="cci_eap_glue_marketo",
+    name="cci-eap-edmdq-marketo",
     version="0.1.0",
     packages=find_packages(include=['tasks','tasks.utils', 
                                     'tasks', 'tasks.aws_api_io', 
