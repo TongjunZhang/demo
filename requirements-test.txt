@@ -1,6 +1,6 @@
 requests
 boto3
-snowflake
+snowflake_connector_python
 urllib3
 botocore
 datetime
