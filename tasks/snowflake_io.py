@@ -93,7 +93,7 @@ class snowflake_io:
         access_token = self.get_snowflake_access_token(secret_data=secret_data)
 
         ctx = snowflake.connector.connect(
-            user='0baab986-1a68-4191-953b-147d8fc0c71c',     # Replace with secret_data["DM_Snowflake_User_ID"]
+            user='0baab986-1a68-4191-953b-147d8fc0c71c',     # Replace with secret_data["DM_Snowflake_Azure_User_ID"]
             role="DATA_MANAGEMENT_RO_ROLE",                  # Replace with secret_data['DM_Snowflake_role']
             account="ccic-mainnew",                          # Replace with secret_data['DM_Snowflake_account']
             warehouse="BUSINESS_REPORTING_WH",               # Replace with secret_data['DM_Snowflake_warehouse']
