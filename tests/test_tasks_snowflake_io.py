@@ -98,6 +98,7 @@ class Testsnowflake_io(unittest.TestCase):
     def test_return_connection(self, mock_connect):
         # Setup secret_data
         secret_data = {
+            "DM_Snowflake_Azure_User_ID": "Azure_User_id",
             "DM_Snowflake_grant_type": "client_credentials",
             "DM_Snowflake_client_ID": "client_id",
             "DM_Snowflake_client_secret": "client_secret",
