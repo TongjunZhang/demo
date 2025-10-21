@@ -9,7 +9,13 @@ setup(
                                     'tasks','tasks.osc_io',
                                     'tasks', 'tasks.https_io']),
     include_package_data=True,
-    install_requires=[],
+        install_requires=[
+        'cryptography>=3.4.8,<44.0.0',
+        'snowflake-connector-python>=3.0.0,<4.0.0',
+        'pyOpenSSL>=21.0.0',
+        'cffi>=1.15.0'
+    ],
+    #install_requires=[],
     author="Enterprise Data Management",
     author_email="tongjun.zhang@crowncastle.com",
     description="Glue job to extract data from Snowflake and create one Account in OSC",
