@@ -1,5 +1,4 @@
 snowflake_connector_python
-concurrent.futures
 logging
 json
 argparse
