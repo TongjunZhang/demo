@@ -1,5 +1,5 @@
-snowflake_connector_python==3.12.2
-concurrent
+snowflake_connector_python
+concurrent.futures
 logging
 json
 argparse
