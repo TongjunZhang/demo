@@ -1,4 +1,7 @@
 snowflake_connector_python==3.12.2
-urllib3<2.0.0
-
-
+concurrent
+logging
+json
+argparse
+time
+datetime
