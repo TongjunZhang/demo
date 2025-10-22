@@ -1,6 +1,4 @@
-requests
 snowflake_connector_python==3.12.2
-datetime
-urllib3==1.25.11
+
 
 
