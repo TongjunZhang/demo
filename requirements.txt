@@ -1,6 +1,1 @@
 snowflake_connector_python
-logging
-json
-argparse
-time
-datetime
