@@ -1,5 +1,5 @@
 requests
-snowflake_connector_python
+snowflake_connector_python==3.12.2
 urllib3
 datetime
 
