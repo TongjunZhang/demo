@@ -1,7 +1,10 @@
 # tasks/https_io.py
-import urllib3.util.ssl_
+# Check if DEFAULT_CIPHERS is missing and define it if necessary
 if not hasattr(urllib3.util.ssl_, 'DEFAULT_CIPHERS'):
-    urllib3.util.ssl_.DEFAULT_CIPHERS = None  # or set to a valid cipher string
+    # You can define a reasonable default or set it to None
+    urllib3.util.ssl_.DEFAULT_CIPHERS = (
+        "ECDHE+AESGCM:ECDHE+CHACHA20:ECDHE+AES256:ECDHE+AES128:!aNULL:!eNULL:!MD5"
+    )
 
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
