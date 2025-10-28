@@ -1,15 +1,15 @@
 # tasks/https_io.py
+import urllib3.util.ssl_
+# If DEFAULT_CIPHERS is missing, define it manually
+if not hasattr(urllib3.util.ssl_, "DEFAULT_CIPHERS"):
+    urllib3.util.ssl_.DEFAULT_CIPHERS = "ECDHE+AESGCM:!ECDSA"
 
 from urllib3.util.retry import Retry
 from requests.adapters import HTTPAdapter
 import requests
 import logging
 import time
-from urllib3.util.ssl_ import DEFAULT_CIPHERS
-# Check if DEFAULT_CIPHERS exists, if not, define it
-if not hasattr(urllib3.util.ssl_, "DEFAULT_CIPHERS"):
-    urllib3.util.ssl_.DEFAULT_CIPHERS = "ECDHE+AESGCM:!ECDSA"  # Example cipher string
-    
+
 class HttpsIo:
     """
     Class to handle HTTP requests with retry logic and logging.
