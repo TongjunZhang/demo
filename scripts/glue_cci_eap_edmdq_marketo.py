@@ -1,3 +1,12 @@
+
+import urllib3.util.ssl_
+ 
+if not hasattr(urllib3.util.ssl_, 'DEFAULT_CIPHERS'):
+    # Define a secure default cipher string
+    urllib3.util.ssl_.DEFAULT_CIPHERS = (
+        "ECDHE+AESGCM:ECDHE+CHACHA20:ECDHE+AES256:ECDHE+AES128:!aNULL:!eNULL:!MD5"
+    )
+
 import logging
 import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
