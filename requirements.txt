@@ -1,2 +1,2 @@
-snowflake_connector_python
-cryptography==43.0.3
+snowflake_connector_python==3.18.0
+cryptography
