@@ -172,11 +172,12 @@ def main():
         pipeline_ids = MarketoETL(
             args=args_u,
             logger=logger
-        ).get_items(
-            # table_name=args_u.conf_table,
-            key={"integrationPattern": args_u.source, "consumeFlag": 1},
-            fields="pipelineId"
         )
+        # ).get_items(
+        #     # table_name=args_u.conf_table,
+        #     key={"integrationPattern": args_u.source, "consumeFlag": 1},
+        #     fields="pipelineId"
+        # )
         logger.info(pipeline_ids)
         pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
     else:
