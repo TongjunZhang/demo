@@ -48,7 +48,7 @@ class Argunents:
         # self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
         #self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=False,default="*")
-        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True) #, default="DM_Snowflake_OSC_nonprod_DQ_ETL"
+        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=False, default="DM_Snowflake_OSC_nonprod_DQ_ETL")
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
         self.arg_parse.add_argument('--region_name', help="region to use", type=str, required=False, default="us-east-2")
