@@ -173,7 +173,7 @@ def main():
             args=args_u,
             logger=logger
         ).get_items(
-            table_name=args_u.conf_table,
+            # table_name=args_u.conf_table,
             key={"integrationPattern": args_u.source, "consumeFlag": 1},
             fields="pipelineId"
         )

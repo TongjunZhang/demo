@@ -32,7 +32,7 @@ class MarketoETL:
             service_name='secretsmanager'
         )
         # Resource for marketoETL
-        self.resource = self.boto3_session.resource('secretsmanager')
+        # self.resource = self.boto3_session.resource('secretsmanager')
         self.logger = logging.getLogger() if logger is None else logger
 
     def put_item(self, row:list = None) -> str:
