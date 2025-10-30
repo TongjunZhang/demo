@@ -185,7 +185,7 @@ def main():
     logger.info("pipelines to execute for this %s" % pipeline_ids)
     # Use ThreadPoolExecutor to process pipelines concurrently
     with concurrent.futures.ThreadPoolExecutor(max_workers=args_u.max_workers) as executor:
-        futures = [executor.submit(process_pipeline, pipeline_id, logger, args_u) for pipeline_id in pipeline_ids]
+        futures = [executor.submit(process_pipeline, 1, logger, args_u)]
         for future in concurrent.futures.as_completed(futures):
             try:
                 future.result()
