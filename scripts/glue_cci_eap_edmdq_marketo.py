@@ -179,7 +179,7 @@ def main():
         #     fields="pipelineId"
         # )
         logger.info(pipeline_ids)
-        pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
+        # pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
     else:
         pipeline_ids = list(args_u.pipelineIds.split(','))
     logger.info("pipelines to execute for this %s" % pipeline_ids)
