@@ -29,8 +29,7 @@ class MarketoETL:
             if boto3_session is None else boto3_session
         )
         self.client = self.boto3_session.client(
-            service_name='secretsmanager',
-            region_name=args.region_name
+            service_name='secretsmanager'
         )
         # Resource for marketoETL
         self.resource = self.boto3_session.resource('secretsmanager')
