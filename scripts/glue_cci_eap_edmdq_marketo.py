@@ -44,10 +44,7 @@ class Argunents:
         self.args: dict = None
         self.arg_parse = argparse.ArgumentParser()
         # Define all required and optional arguments
-        # self.arg_parse.add_argument('--conf_table', help='MarketETL Configuration Table', type=str, required=True)
-        # self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
-        #self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=False,default="*")
         self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
@@ -173,11 +170,6 @@ def main():
             args=args_u,
             logger=logger
         )
-        # ).get_items(
-        #     # table_name=args_u.conf_table,
-        #     key={"integrationPattern": args_u.source, "consumeFlag": 1},
-        #     fields="pipelineId"
-        # )
         logger.info(pipeline_ids)
         # pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
     else:
