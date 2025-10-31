@@ -48,7 +48,7 @@ class Argunents:
         # self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
         #self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=False,default="*")
-        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=False, default="DM_Snowflake_OSC_nonprod_DQ_ETL")
+        self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
         self.arg_parse.add_argument('--region_name', help="region to use", type=str, required=False, default="us-east-2")
@@ -185,7 +185,7 @@ def main():
     logger.info("pipelines to execute for this %s" % pipeline_ids)
     # Use ThreadPoolExecutor to process pipelines concurrently
     with concurrent.futures.ThreadPoolExecutor(max_workers=args_u.max_workers) as executor:
-        futures = [executor.submit(process_pipeline, 1, logger, args_u)]
+        futures = [executor.submit(process_pipeline, '1', logger, args_u)] 
         for future in concurrent.futures.as_completed(futures):
             try:
                 future.result()
