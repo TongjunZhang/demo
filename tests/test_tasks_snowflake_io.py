@@ -48,7 +48,8 @@ class Testsnowflake_io(unittest.TestCase):
             "grant_type": "mock_client_credentials",
             "client_id": "mock_client_id",
             "client_secret": "mock_client_secret",
-            "base_url": "https://mock_env.api.crm.dynamics.com"
+            "base_url": "https://mock_env.api.crm.dynamics.com",
+            "scope": "mock_scope"
         }
         
         # Mock the response from the requests.post call
