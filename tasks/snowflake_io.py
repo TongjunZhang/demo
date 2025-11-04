@@ -125,7 +125,7 @@ class snowflake_io:
         rows = None
         try:
             # Query for rows where ACCOUNT_NUMBER is NULL
-            datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL")
+            datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER =''")
             rows = datacursor.fetchall()
             datacursor.close()
         except Exception as e:
