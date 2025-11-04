@@ -49,7 +49,8 @@ class Testsnowflake_io(unittest.TestCase):
             "client_id": "mock_client_id",
             "client_secret": "mock_client_secret",
             "base_url": "https://mock_env.api.crm.dynamics.com",
-            "scope": "mock_scope"
+            "scope": "mock_scope",
+
         }
         
         # Mock the response from the requests.post call
@@ -104,7 +105,11 @@ class Testsnowflake_io(unittest.TestCase):
             "DM_Snowflake_client_ID": "client_id",
             "DM_Snowflake_client_secret": "client_secret",
             "DM_Snowflake_auth_scope": "scope",
-            "DM_Snowflake_token_url": "https://token.url"
+            "DM_Snowflake_token_url": "https://token.url",
+            "DM_Snowflake_Role": "Role",
+            "DM_Snowflake_Account": "Account",
+            "DM_Snowflake_Warehouse": "Warehouse",
+            "DM_Snowflake_Database": "Database"
         }
         # Mock access token
         self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
