@@ -140,7 +140,8 @@ def process_pipeline(
                 pipeline_id=pipeline_id
             ).create_OSC_Account(
                 payload_data=payload,
-                access_token=osc_accesstoken
+                access_token=osc_accesstoken,
+                secret_data=secret_data
             )
         except Exception as e:
             logger.error(f"Error putting payload data to OSC: {e}")

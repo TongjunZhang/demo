@@ -60,15 +60,15 @@ class osc_io:
                 "Accept": "application/json"
             }
             payload = {
-                'grant_type': 'client_credentials',
-                'client_id': 'db80b2c6-bfdc-49af-9627-f63b73b85ada',
-                'client_secret': 'PBTRXCa6lnE_-G6M5S-e8H5T0ek5.A3E-D',
-                'scope': 'https://vault.azure.net/.default'
+                'grant_type': secret_data["DM_OSC_API_Grant_Type"],
+                'client_id': secret_data["DM_OSC_API_Client_ID"],
+                'client_secret': secret_data["DM_OSC_API_Client_Secret"],
+                'scope': secret_data["DM_OSC_API_Scope"]
             }
             # Make POST request to obtain access token
             _, response = HttpsIo(logger=self.logger).http_request(
                 http_method='POST',
-                http_url='https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token',
+                http_url=secret_data["DM_OSC_API_Token_Create_Url"],
                 http_head=headers,
                 http_data=payload
             )
@@ -76,7 +76,7 @@ class osc_io:
             my_access_token = response.json().get('access_token', "")
         return my_access_token
 
-    def create_OSC_Account(self, payload_data: str, access_token: str) -> dict:
+    def create_OSC_Account(self, payload_data: str, access_token: str, secret_data: dict) -> dict:
         """
         Create an account in OSC using the provided payload and access token.
 
@@ -87,7 +87,7 @@ class osc_io:
         Returns:
             dict: JSON response from OSC API.
         """
-        url = "https://crowncastle-dev.crm.dynamics.com/api/data/v9.1/accounts"
+        url = secret_data["DM_OSC_API_Account_Create"]
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f"Bearer {access_token}",

@@ -94,13 +94,13 @@ class snowflake_io:
 
         ctx = snowflake.connector.connect(
             user=secret_data["DM_Snowflake_Azure_User_ID"],
-            role="DATA_MANAGEMENT_RO_ROLE",                  # Replace with secret_data['DM_Snowflake_role']
-            account="ccic-mainnew",                          # Replace with secret_data['DM_Snowflake_account']
-            warehouse="BUSINESS_REPORTING_WH",               # Replace with secret_data['DM_Snowflake_warehouse']
-            database="CDWDEV",                               # Replace with secret_data['DM_Snowflake_database']
-            schema="DATA_MANAGEMENT",                        # Replace with secret_data['DM_Snowflake_schema']
-            autocommit=True,                                 # Replace with secret_data['DM_Snowflake_autocommit']
-            authenticator="OAuth",                           # Replace with secret_data['DM_Snowflake_authenticator']
+            role=secret_data["DM_Snowflake_Role"],                  
+            account=secret_data["DM_Snowflake_Account"],                          
+            warehouse=secret_data["DM_Snowflake_Warehouse"],               
+            database=secret_data['DM_Snowflake_Database'],                 
+            schema="DATA_MANAGEMENT",                        
+            autocommit=True,                                
+            authenticator="OAuth",                           
             token=access_token
         )
         return ctx
