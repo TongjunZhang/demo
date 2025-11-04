@@ -7,6 +7,7 @@ from boto3.dynamodb.conditions import Key, Attr
 import logging
 import json
 import argparse
+from datetime import datetime
 
 # Class to interact with Marketo ETL and DynamoDB
 class MarketoETL:
@@ -34,7 +35,23 @@ class MarketoETL:
         # Resource for marketoETL
         # self.resource = self.boto3_session.resource('secretsmanager')
         self.logger = logging.getLogger() if logger is None else logger
-
+    def get_latest_watermark(
+        self, 
+        pipeline_id: str
+    ) -> str:
+        """
+        Get the latest watermark for the pipeline
+        Args:
+            pipeline_id: str: the pipeline id
+            table_name: str: the table name
+        Returns:
+            str: the latest watermark
+        """
+        default_watermark = "1969-01-01T00:00:00Z"
+        watermark = str(datetime.now()) + "_" + pipeline_id
+        self.logger.info('searching by partition key for pipeline_id: %s' % pipeline_id)
+  
+        return watermark
     def put_item(self, row:list = None) -> str:
         """
         Create a payload from a ZoomInfo row.
