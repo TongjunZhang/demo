@@ -79,7 +79,7 @@ class Testsnowflake_io(unittest.TestCase):
         # Assertions
         mock_connect.cursor.assert_called_once()
         mock_cursor.execute.assert_called_once_with(
-            "SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ZOOMINFO_COMPANY_ID IS NULL"
+            "SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL"
         )
         mock_cursor.fetchall.assert_called_once()
         mock_cursor.close.assert_called_once()
