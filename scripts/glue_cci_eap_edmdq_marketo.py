@@ -101,7 +101,7 @@ def process_pipeline(
             pipeline_id=pipeline_id  #,
             # execution_id=execution_id
         ).return_connection(secret_data)
-    except Exception as e
+    except Exception as e:
         logger.info(f"Error getting snowflake connection: {e}")
     try:
         # Fetch entity data from Snowflake
