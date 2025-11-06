@@ -44,7 +44,8 @@ class snowflake_io:
 
     def get_snowflake_access_token(
         self,
-        secret_data: dict
+        secret_data: dict,
+        access_token: str = None
     ) -> str:
         """
         Get the access token from the secret data or request a new one.

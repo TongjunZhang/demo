@@ -40,7 +40,8 @@ class osc_io:
 
     def get_osc_access_token(
             self,
-            secret_data: dict
+            secret_data: dict,
+            access_token: str = None
     ) -> str:
         """
         Obtain an access token from secret data or request a new one.
