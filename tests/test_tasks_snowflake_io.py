@@ -45,11 +45,11 @@ class Testsnowflake_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "grant_type": "mock_client_credentials",
-            "client_id": "mock_client_id",
-            "client_secret": "mock_client_secret",
-            "base_url": "https://mock_env.api.crm.dynamics.com",
-            "scope": "mock_scope"
+            "DM_Snowflake_grant_type": "mock_client_credentials",
+            "DM_Snowflake_client_ID": "mock_client_id",
+            "DM_Snowflake_client_secret": "mock_client_secret",
+            "DM_Snowflake_token_url": "https://mock_env.api.crm.dynamics.com",
+            "DM_Snowflake_auth_scope": "mock_scope"
         }
         
         # Mock the response from the requests.post call
