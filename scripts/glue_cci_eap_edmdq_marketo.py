@@ -94,6 +94,7 @@ def process_pipeline(
 
     logger.info('Step: Get data from zoominfo from snowflake')
     zoomInfo_rows = None
+    snowfalke_connect = None
     try:
         snowfalke_connect = snowflake_io(
             args=args_u,
