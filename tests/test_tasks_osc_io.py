@@ -50,7 +50,7 @@ class testosc_io(unittest.TestCase):
         mock_response.json.return_value = {"access_token": "mock_access_token"}
 
         # Call the get_osc_access_token method
-        osc_access_token = self.osc_io_instance.get_osc_access_token(secret_data=mock_get_secret())
+        osc_access_token = self.osc_io_instance.get_osc_access_token(secret_data=mock_get_secret)
 
         self.assertIsNotNone(osc_access_token)
 
