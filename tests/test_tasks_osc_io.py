@@ -38,11 +38,11 @@ class testosc_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "DM_OSC_API_Grant_Type": "mock_client_credentials",
+            "DM_OSC_API_Grant_Type": "client_credentials",
             "DM_OSC_API_Client_ID": "mock_client_id",
             "DM_OSC_API_Client_Secret": "mock_client_secret",
-            "DM_OSC_API_Token_Create_Url": "https://mock_env.api.crm.dynamics.com",
-            "DM_OSC_API_Scope" :  "mock_scope" #todo:change
+            "DM_OSC_API_Token_Create_Url": "https://your-oauth-provider.com/token",
+            "DM_OSC_API_Scope" :  "OSC_scope" #todo:change
         }
         
         # Mock the response from the requests.post call

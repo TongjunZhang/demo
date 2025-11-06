@@ -45,11 +45,11 @@ class Testsnowflake_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "DM_Snowflake_grant_type": "mock_client_credentials",
+            "DM_Snowflake_grant_type": "client_credentials",
             "DM_Snowflake_client_ID": "mock_client_id",
             "DM_Snowflake_client_secret": "mock_client_secret",
-            "DM_Snowflake_token_url": "https://mock_env.api.crm.dynamics.com",
-            "DM_Snowflake_auth_scope": "mock_scope"
+            "DM_Snowflake_token_url": "https://your-oauth-provider.com/token",
+            "DM_Snowflake_auth_scope": "snowflake_scope"
         }
         
         # Mock the response from the requests.post call
@@ -100,15 +100,15 @@ class Testsnowflake_io(unittest.TestCase):
         # Setup secret_data
         secret_data = {
             "DM_Snowflake_Azure_User_ID": "Azure_User_id",
-            "DM_Snowflake_grant_type": "client_credentials",
-            "DM_Snowflake_client_ID": "client_id",
-            "DM_Snowflake_client_secret": "client_secret",
-            "DM_Snowflake_auth_scope": "scope",
-            "DM_Snowflake_token_url": "https://token.url",
+            # "DM_Snowflake_grant_type": "client_credentials",
+            # "DM_Snowflake_client_ID": "client_id",
+            # "DM_Snowflake_client_secret": "client_secret",
             "DM_Snowflake_Role": "Role",
             "DM_Snowflake_Account": "Account",
             "DM_Snowflake_Warehouse": "Warehouse",
-            "DM_Snowflake_Database": "Database"
+            "DM_Snowflake_Database": "Database",
+            # "DM_Snowflake_auth_scope": "scope",
+            # "DM_Snowflake_token_url": "https://token.url"
         }
         # Mock access token
         self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
