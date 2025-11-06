@@ -59,6 +59,7 @@ class snowflake_io:
         """
         my_access_token = access_token
         if not my_access_token:
+            self.logger.info('getting snowflake access token')
             headers = {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
