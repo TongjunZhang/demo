@@ -73,7 +73,7 @@ class osc_io:
                 http_data=payload
             )
             self.logger.info('Access token being requested / replaced')
-            my_access_token = response.json().get('access_token', "")
+            my_access_token = response.json().get('access_token')
         return my_access_token
 
     def create_OSC_Account(self, payload_data: str, access_token: str, secret_data: dict) -> dict:
