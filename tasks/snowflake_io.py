@@ -44,8 +44,7 @@ class snowflake_io:
 
     def get_snowflake_access_token(
         self,
-        secret_data: dict,
-        access_token: str = None
+        secret_data: dict
     ) -> str:
         """
         Get the access token from the secret data or request a new one.
@@ -57,28 +56,27 @@ class snowflake_io:
         Returns:
             str: Access token string.
         """
-        my_access_token = access_token
-        if not my_access_token:
-            self.logger.info('getting snowflake access token')
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-            payload = {
-                'grant_type': secret_data["DM_Snowflake_grant_type"],
-                'client_id': secret_data["DM_Snowflake_client_ID"],
-                'client_secret': secret_data["DM_Snowflake_client_secret"],
-                'scope': secret_data["DM_Snowflake_auth_scope"]
-            }
-            # Make POST request to obtain access token
-            response = HttpsIo(logger=self.logger).http_request(
-                http_method='POST',
-                http_url=secret_data.get('DM_Snowflake_token_url'),
-                http_head=headers,
-                http_data=payload
-            )
-            response_value = json.loads(response)
-            my_access_token = response_value.get('access_token')
-            self.logger.info('Access token being requested / replaced:'+my_access_token)
+        my_access_token = None
+        self.logger.info('getting snowflake access token')
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        payload = {
+            'grant_type': secret_data["DM_Snowflake_grant_type"],
+            'client_id': secret_data["DM_Snowflake_client_ID"],
+            'client_secret': secret_data["DM_Snowflake_client_secret"],
+            'scope': secret_data["DM_Snowflake_auth_scope"]
+        }
+        # Make POST request to obtain access token
+        response = HttpsIo(logger=self.logger).http_request(
+            http_method='POST',
+            http_url=secret_data.get('DM_Snowflake_token_url'),
+            http_head=headers,
+            http_data=payload
+        )
+        response_value = json.loads(response)
+        my_access_token = response_value.get('access_token')
+        self.logger.info('Access token being requested / replaced:'+my_access_token)
         return my_access_token
 
     def return_connection(self, secret_data) -> snowflake.connector.connection.SnowflakeConnection:
