@@ -40,8 +40,7 @@ class osc_io:
 
     def get_osc_access_token(
             self,
-            secret_data: dict,
-            access_token: str = None
+            secret_data: dict
     ) -> str:
         """
         Obtain an access token from secret data or request a new one.
@@ -53,27 +52,27 @@ class osc_io:
         Returns:
             str: Access token string.
         """
-        my_access_token = access_token
-        if not my_access_token:
-            headers = {
-                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-                "Accept": "application/json"
-            }
-            payload = {
-                'grant_type': secret_data["DM_OSC_API_Grant_Type"],
-                'client_id': secret_data["DM_OSC_API_Client_ID"],
-                'client_secret': secret_data["DM_OSC_API_Client_Secret"],
-                'scope': secret_data["DM_OSC_API_Scope"]
-            }
+        my_access_token = None
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Accept": "application/json"
+        }
+        payload = {
+            'grant_type': secret_data["DM_OSC_API_Grant_Type"],
+            'client_id': secret_data["DM_OSC_API_Client_ID"],
+            'client_secret': secret_data["DM_OSC_API_Client_Secret"],
+            'scope': secret_data["DM_OSC_API_Scope"]
+        }
             # Make POST request to obtain access token
-            _, response = HttpsIo(logger=self.logger).http_request(
-                http_method='POST',
-                http_url=secret_data["DM_OSC_API_Token_Create_Url"],
-                http_head=headers,
-                http_data=payload
-            )
-            self.logger.info('Access token being requested / replaced')
-            my_access_token = response.json().get('access_token')
+        response = HttpsIo(logger=self.logger).http_request(
+            http_method='POST',
+            http_url=secret_data["DM_OSC_API_Token_Create_Url"],
+            http_head=headers,
+            http_data=payload
+        )
+        self.logger.info('Access token being requested / replaced')
+        response_value = response.json()
+        my_access_token = response_value.get('access_token')
         return my_access_token
 
     def create_OSC_Account(self, payload_data: str, access_token: str, secret_data: dict) -> dict:
