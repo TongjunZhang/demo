@@ -60,7 +60,7 @@ class Testsnowflake_io(unittest.TestCase):
         # mock_requests_post.return_value = True, mock_response
         
         # Call the get_snowflake_access_token method
-        snowflake_access_token = self.snowflake_io_instance.get_snowflake_access_token(secret_data=mock_get_secret(), access_token=self.snowflake_access_token)
+        snowflake_access_token = self.snowflake_io_instance.get_snowflake_access_token(secret_data=mock_get_secret())
         self.assertIsNotNone(snowflake_access_token)
 
     # @patch('tasks.https_io.HttpsIo.http_request')
