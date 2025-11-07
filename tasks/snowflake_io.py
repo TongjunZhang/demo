@@ -92,23 +92,19 @@ class snowflake_io:
         """
         access_token = self.get_snowflake_access_token(secret_data=secret_data)
 
-        try:
-            ctx = snowflake.connector.connect(
-                user=secret_data["DM_Snowflake_Azure_User_ID"],
-                role=secret_data["DM_Snowflake_Role"],                  
-                account=secret_data["DM_Snowflake_Account"],                          
-                warehouse=secret_data["DM_Snowflake_Warehouse"],               
-                database=secret_data['DM_Snowflake_Database'],                 
-                schema="DATA_MANAGEMENT",                        
-                autocommit=True,                                
-                authenticator="OAuth",                           
-                token=access_token
-            )
-            return ctx
-        except Exception as e:
-            self.logger.error(f"Error getting snowflake connection: {e}")
-            return None
-        
+        ctx = snowflake.connector.connect(
+            user=secret_data["DM_Snowflake_Azure_User_ID"],
+            role=secret_data["DM_Snowflake_Role"],                  
+            account=secret_data["DM_Snowflake_Account"],                          
+            warehouse=secret_data["DM_Snowflake_Warehouse"],               
+            database=secret_data['DM_Snowflake_Database'],                 
+            schema="DATA_MANAGEMENT",                        
+            autocommit=True,                                
+            authenticator="OAuth",                           
+            token=access_token
+        )
+        return ctx
+       
 
     def transfer_entity_data(
         self,

@@ -41,7 +41,7 @@ class testosc_io(unittest.TestCase):
             "DM_OSC_API_Grant_Type": "client_credentials",
             "DM_OSC_API_Client_ID": "mock_client_id",
             "DM_OSC_API_Client_Secret": "mock_client_secret",
-            "DM_OSC_API_Token_Create_Url": "https://your-oauth-provider.com/token",
+            "DM_OSC_API_Token_Create_Url": "https://token.url",
             "DM_OSC_API_Scope" :  "OSC_scope" #todo:change
         }
         
