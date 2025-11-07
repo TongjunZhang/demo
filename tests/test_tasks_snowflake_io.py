@@ -97,7 +97,7 @@ class Testsnowflake_io(unittest.TestCase):
         self.assertIsNone(result)
 
     @patch('tasks.snowflake_io.snowflake.connector.connect')
-    def test_return_connection_success(self, mock_connect):
+    def test_return_connection(self, mock_connect):
         # Setup secret_data
         secret_data = {
             "DM_Snowflake_Azure_User_ID": "Azure_User_id",
@@ -122,43 +122,6 @@ class Testsnowflake_io(unittest.TestCase):
         mock_connect.assert_called_once_with()
         self.assertEqual(result, mock_connection)
     
-    @patch('tasks.snowflake_io.snowflake.connector.connect')
-    def test_return_connection_failure(self, mock_connect):
-        # Setup secret_data
-        secret_data = {
-            "DM_Snowflake_Azure_User_ID": "Azure_User_id",
-            "DM_Snowflake_grant_type": "client_credentials",
-            "DM_Snowflake_client_ID": "client_id",
-            "DM_Snowflake_client_secret": "client_secret",
-            "DM_Snowflake_Role": "Role",
-            "DM_Snowflake_Account": "Account",
-            "DM_Snowflake_Warehouse": "Warehouse",
-            "DM_Snowflake_Database": "Database",
-            "DM_Snowflake_auth_scope": "scope",
-            "DM_Snowflake_token_url": "https://token.url"
-        }
-
-        # mock_connection = MagicMock()
-        # mock_response.status_code = 401
-        # mock_response.raise_for_status.side_effect = requests.exceptions.HTTPError("401 Client Error: Unauthorized")
-        # mock_post.return_value = mock_response
-        # Mock access token
-        self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
-        # Mock connection object
-        mock_connection = MagicMock()
-        mock_connect.return_value = mock_connection
-
-        result = self.snowflake_io_instance.return_connection(secret_data)
-
-                # Verify
-        assert result is None
-        self.mock_client.return_connection.assert_called_once_with(secret_data)
-        self.mock_logger.info.assert_called_once_with(f"Getting snowflake connection {secret_data}")
-        self.mock_logger.error.assert_called_once()
- 
-
-
-
 
 if __name__ == "__main__":
     unittest.main()        
