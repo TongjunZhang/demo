@@ -106,7 +106,7 @@ def process_pipeline(
             "DM_OSC_API_Token_Create_Url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token",
             "DM_OSC_API_Client_ID" : "db80b2c6-bfdc-49af-9627-f63b73b85ada",
             "DM_OSC_API_Client_Secret" : "PBTRXCa6lnE_-G6M5S-e8H5T0ek5.A3E-D",
-            "DM_OSC_API_Scope" : "https://vault.azure.net/.default",
+            "DM_OSC_API_Scope" : "https://crowncastle-dev.crm.dynamics.com/",
             "DM_OSC_API_Grant_Type" : "client_credentials"
         }
     elif args_u.env == 'prd':
@@ -125,7 +125,7 @@ def process_pipeline(
             "DM_OSC_API_Token_Create_Url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token",
             "DM_OSC_API_Client_ID" : "d9f4fcfc-a3b0-49e7-8a74-c0770dd6e381",
             "DM_OSC_API_Client_Secret" : "CqZoRq_EzmvoEvP-_oN.s8.z21~J7p7ZeC",
-            "DM_OSC_API_Scope" : "https://vault.azure.net/.default",
+            "DM_OSC_API_Scope" : "https://crowncastle.crm.dynamics.com/",
             "DM_OSC_API_Grant_Type" : "client_credentials"
             }
     else:
