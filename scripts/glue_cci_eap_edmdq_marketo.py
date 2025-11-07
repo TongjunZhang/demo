@@ -189,7 +189,7 @@ def process_pipeline(
         except Exception as e:
             logger.error(f"Error putting payload data to OSC: {e}")
             return
-        accountnumber = oscresponse.json().get('accountnumber')
+        accountnumber = oscresponse.get('accountnumber')
         if  accountnumber is not None:
             try:
                 snowflake_io(
