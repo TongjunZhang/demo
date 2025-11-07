@@ -141,7 +141,7 @@ class snowflake_io:
         zoominfo_company_id:str = None
         ):
         datacursor = connect.cursor()
-        sqlstr = "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" + f'{accountnumber}' + "' WHERE ZOOMINFO_COMPANY_ID = '" + f'{zoominfo_company_id}' + "' AND ACCOUNT_NUMBER IS NULL"
+        sqlstr = "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" + f'{accountnumber}' + "' WHERE ZOOMINFO_COMPANY_ID = '" + f'{zoominfo_company_id}' + "' AND (ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER =''"
         datacursor.execute(sqlstr)
         datacursor.execute("COMMIT")
         datacursor.close()
