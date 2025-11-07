@@ -75,7 +75,7 @@ class snowflake_io:
             http_head=headers,
             http_data=payload
         )
-        response_value = json.loads(response)
+        response_value = response.json()
         my_access_token = response_value.get('access_token')
         self.logger.info('Access token being requested / replaced:'+my_access_token)
         return my_access_token
