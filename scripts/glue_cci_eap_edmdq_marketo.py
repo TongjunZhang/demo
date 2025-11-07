@@ -189,15 +189,15 @@ def process_pipeline(
         except Exception as e:
             logger.error(f"Error putting payload data to OSC: {e}")
             return
-
-        if not oscresponse.get('accountnumber'):
+        accountnumber = oscresponse.json().get('accountnumber')
+        if  accountnumber is not None:
             try:
                 snowflake_io(
                     args=args_u,
                     logger=logger,
                     pipeline_id=pipeline_id
                 ).update_osc_account(connect=snowfalke_connect,
-                                     accountnumber=oscresponse.get('accountnumber'), 
+                                     accountnumber=accountnumber, 
                                      zoominfo_company_id=row[0])
                 snowfalke_connect.close()
             except Exception as e:
