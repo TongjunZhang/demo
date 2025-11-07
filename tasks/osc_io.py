@@ -71,9 +71,9 @@ class osc_io:
             http_head=headers,
             http_data=payload
         )
-        self.logger.info('Access token being requested / replaced')
         response_value = response.json()
         my_access_token = response_value.get('access_token')
+        self.logger.info('Access token being requested / replaced:' + my_access_token)
         return my_access_token
 
     def create_OSC_Account(self, payload_data: str, access_token: str, secret_data: dict) -> dict:
@@ -96,7 +96,7 @@ class osc_io:
         # Make POST request to create account
         _, response = HttpsIo(logger=self.logger).http_request(
             http_method='POST',
-            http_url=secret_data["DM_OSC_API_Account_Create"],
+            http_url=url,
             http_head=headers,
             http_data=payload_data
         )
