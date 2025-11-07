@@ -65,6 +65,7 @@ class osc_io:
             'scope': secret_data["DM_OSC_API_Scope"],
             'resource': secret_data["DM_OSC_API_Resource"]
         }
+        self.logger.info(payload)
             # Make POST request to obtain access token
         _, response = HttpsIo(logger=self.logger).http_request(
             http_method='POST',
