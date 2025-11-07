@@ -24,7 +24,6 @@ class Testsnowflake_io(unittest.TestCase):
         self.pipeline_id = "mock_pipeline_id"
         self.mock_session = mock_session
         self.snowflake_access_token = "mock_access_token"
-        self.snowflake_connection = "mock_connection"
 
         # Mock the logger
         self.mock_logger = MagicMock()
@@ -46,11 +45,11 @@ class Testsnowflake_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "DM_Snowflake_grant_type": "client_credentials",
-            "DM_Snowflake_client_ID": "mock_client_id",
-            "DM_Snowflake_client_secret": "mock_client_secret",
-            "DM_Snowflake_token_url": "https://your-oauth-provider.com/token",
-            "DM_Snowflake_auth_scope": "snowflake_scope"
+            "grant_type": "mock_client_credentials",
+            "client_id": "mock_client_id",
+            "client_secret": "mock_client_secret",
+            "base_url": "https://mock_env.api.crm.dynamics.com",
+            "scope": "mock_scope"
         }
         
         # Mock the response from the requests.post call
@@ -100,16 +99,16 @@ class Testsnowflake_io(unittest.TestCase):
     def test_return_connection(self, mock_connect):
         # Setup secret_data
         secret_data = {
-            "DM_Snowflake_Azure_User_ID": "Azure_User_id",
-            "DM_Snowflake_grant_type": "client_credentials",
-            "DM_Snowflake_client_ID": "client_id",
-            "DM_Snowflake_client_secret": "client_secret",
-            "DM_Snowflake_Role": "Role",
-            "DM_Snowflake_Account": "Account",
-            "DM_Snowflake_Warehouse": "Warehouse",
-            "DM_Snowflake_Database": "Database",
-            "DM_Snowflake_auth_scope": "scope",
-            "DM_Snowflake_token_url": "https://token.url"
+            "User_ID": "mock_User_id",
+            "grant_type": "mock_client_credentials",
+            "client_ID": "mock_client_id",
+            "client_secret": "mock_client_secret",
+            "scope": "mock_scope",
+            "token_url": "https://token.url",
+            "Role": "mock_ole",
+            "Account": "mock_acount",
+            "Warehouse": "mock_warehouse",
+            "Database": "mock_database"
         }
         # Mock access token
         self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
@@ -119,9 +118,9 @@ class Testsnowflake_io(unittest.TestCase):
 
         result = self.snowflake_io_instance.return_connection(secret_data)
 
-        mock_connect.assert_called_once_with()
+        mock_connect.assert_called_once()
         self.assertEqual(result, mock_connection)
-    
+
 
 if __name__ == "__main__":
     unittest.main()        

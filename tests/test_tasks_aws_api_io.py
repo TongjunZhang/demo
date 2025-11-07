@@ -114,24 +114,24 @@ class TestSecretsManagerIO:
         self.mock_logger.info.assert_any_call(f"Getting secret {secret_name}")
         self.mock_logger.info.assert_any_call("Secret fetched successfully")
 
-    # def test_get_secret_client_error(self):
-    #       """Test handling of ClientError when getting secret"""
-    #       # Setup
-    #       secret_name = "test-secret"
-    #       error_message = "Secret not found"
-    #       self.mock_client.get_secret_value.side_effect = ClientError(
-    #           error_response={'Error': {'Message': error_message}},
-    #           operation_name='GetSecretValue'
-    #       )
+    def test_get_secret_client_error(self):
+          """Test handling of ClientError when getting secret"""
+          # Setup
+          secret_name = "test-secret"
+          error_message = "Secret not found"
+          self.mock_client.get_secret_value.side_effect = ClientError(
+              error_response={'Error': {'Message': error_message}},
+              operation_name='GetSecretValue'
+          )
 
-    #       # Execute
-    #       result = self.secrets_manager.get_secret(secret_name)
+          # Execute
+          result = self.secrets_manager.get_secret(secret_name)
 
-    #       # Verify
-    #       assert result is None
-    #       self.mock_client.get_secret_value.assert_called_once_with(SecretId=secret_name)
-    #       self.mock_logger.info.assert_called_once_with(f"Getting secret {secret_name}")
-    #       self.mock_logger.error.assert_called_once()
+          # Verify
+          assert result is None
+          self.mock_client.get_secret_value.assert_called_once_with(SecretId=secret_name)
+          self.mock_logger.info.assert_called_once_with(f"Getting secret {secret_name}")
+          self.mock_logger.error.assert_called_once()
 
 if __name__ == "__main__":
     unittest.main()
