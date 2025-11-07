@@ -145,4 +145,4 @@ class snowflake_io:
         datacursor.execute(sqlstr)
         datacursor.execute("COMMIT")
         datacursor.close()
-        print(accountnumber)
+        self.logger.info('account number: '+ accountnumber)
