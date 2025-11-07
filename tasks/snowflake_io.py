@@ -69,7 +69,7 @@ class snowflake_io:
             'scope': secret_data["DM_Snowflake_auth_scope"]
         }
         # Make POST request to obtain access token
-        response = HttpsIo(logger=self.logger).http_request(
+        _, response = HttpsIo(logger=self.logger).http_request(
             http_method='POST',
             http_url=secret_data.get('DM_Snowflake_token_url'),
             http_head=headers,

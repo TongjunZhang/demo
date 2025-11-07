@@ -65,7 +65,7 @@ class osc_io:
             'scope': secret_data["DM_OSC_API_Scope"]
         }
             # Make POST request to obtain access token
-        response = HttpsIo(logger=self.logger).http_request(
+        _, response = HttpsIo(logger=self.logger).http_request(
             http_method='POST',
             http_url=secret_data["DM_OSC_API_Token_Create_Url"],
             http_head=headers,
