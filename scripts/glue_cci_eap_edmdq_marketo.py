@@ -176,18 +176,12 @@ def process_pipeline(
         oscresponse = None
         try:
             # Send payload data to OSC
-            osc_accesstoken = osc_io(
-                args=args_u,
-                logger=logger,
-                pipeline_id=pipeline_id
-            ).get_osc_access_token(secret_data=secret_data)
             oscresponse = osc_io(
                 args=args_u,
                 logger=logger,
                 pipeline_id=pipeline_id
             ).create_OSC_Account(
                 payload_data=payload,
-                access_token=osc_accesstoken,
                 secret_data=secret_data
             )
         except Exception as e:

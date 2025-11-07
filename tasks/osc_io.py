@@ -73,10 +73,10 @@ class osc_io:
         )
         response_value = response.json()
         my_access_token = response_value.get('access_token')
-        self.logger.info('Access token being requested / replaced:' + my_access_token)
+        self.logger.info('Access token being requested / replaced')
         return my_access_token
 
-    def create_OSC_Account(self, payload_data: str, access_token: str, secret_data: dict) -> dict:
+    def create_OSC_Account(self, payload_data: str, secret_data: dict) -> dict:
         """
         Create an account in OSC using the provided payload and access token.
 
@@ -87,6 +87,7 @@ class osc_io:
         Returns:
             dict: JSON response from OSC API.
         """
+        access_token = self.get_osc_access_token(secret_data=secret_data)
         url = secret_data["DM_OSC_API_Account_Create"]
         headers = {
             'Content-Type': 'application/json',
