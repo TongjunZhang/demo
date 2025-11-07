@@ -169,7 +169,7 @@ def process_pipeline(
             payload = MarketoETL(
                 args=args_u,
                 logger=logger
-            ).put_item(row)
+            ).put_item(row=row)
         except Exception as e:
             logger.error(f"Error putting execution data to OSC: {e}")
             return

@@ -77,7 +77,7 @@ class snowflake_io:
         )
         response_value = response.json()
         my_access_token = response_value.get('access_token')
-        self.logger.info('Access token being requested / replaced:'+my_access_token)
+        self.logger.info('Access token being requested / replaced')
         return my_access_token
 
     def return_connection(self, secret_data) -> snowflake.connector.connection.SnowflakeConnection:
