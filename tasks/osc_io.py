@@ -62,7 +62,8 @@ class osc_io:
             'grant_type': secret_data["DM_OSC_API_Grant_Type"],
             'client_id': secret_data["DM_OSC_API_Client_ID"],
             'client_secret': secret_data["DM_OSC_API_Client_Secret"],
-            'scope': secret_data["DM_OSC_API_Scope"]
+            'scope': secret_data["DM_OSC_API_Scope"],
+            'resource': secret_data["DM_OSC_API_Resource"]
         }
             # Make POST request to obtain access token
         _, response = HttpsIo(logger=self.logger).http_request(
