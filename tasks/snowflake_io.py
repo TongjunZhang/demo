@@ -129,7 +129,7 @@ class snowflake_io:
             datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER =''")
             rows = datacursor.fetchall()
             self.logger.info('got zoominfo data')
-            # datacursor.close()
+            datacursor.close()
         except Exception as e:
             self.logger.error(f"Error getting execution data from ZoomInfo table: {e}")
         return rows

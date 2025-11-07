@@ -199,7 +199,6 @@ def process_pipeline(
                 ).update_osc_account(connect=snowfalke_connect,
                                      accountnumber=accountnumber, 
                                      zoominfo_company_id=row[0])
-                
             except Exception as e:
                 logger.error(f"Error updating OSC account in Snowflake: {e}")
                 return
