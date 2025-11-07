@@ -80,7 +80,7 @@ class snowflake_io:
         self.logger.info('Access token being requested / replaced')
         return my_access_token
 
-    def return_connection(self, secret_data: dict) -> snowflake.connector.connection.SnowflakeConnection:
+    def return_connection(self, secret_data) -> snowflake.connector.connection.SnowflakeConnection:
         """
         Establish and return a Snowflake connection using secret data.
 
@@ -129,18 +129,18 @@ class snowflake_io:
             datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER =''")
             rows = datacursor.fetchall()
             self.logger.info('got zoominfo data')
-            datacursor.close()
+            # datacursor.close()
         except Exception as e:
             self.logger.error(f"Error getting execution data from ZoomInfo table: {e}")
         return rows
 
     def update_osc_account(self,
-        secret_data: dict,
+        # watermark: str = None,
+        connect: snowflake.connector.connection.SnowflakeConnection = None,
         accountnumber: str = None,
         zoominfo_company_id:str = None
         ):
-        snowflakeconnection = self.return_connection(secret_data=secret_data)
-        datacursor = snowflakeconnection.cursor()
+        datacursor = connect.cursor()
         sqlstr = "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" + f'{accountnumber}' + "' WHERE ZOOMINFO_COMPANY_ID = '" + f'{zoominfo_company_id}' + "' AND (ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER ='')"
         datacursor.execute(sqlstr)
         datacursor.execute("COMMIT")
