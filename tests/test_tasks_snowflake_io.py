@@ -47,7 +47,7 @@ class Testsnowflake_io(unittest.TestCase):
         mock_get_secret.return_value = {
             "DM_Snowflake_token_url" : "https://mock_token.url",
             "DM_Snowflake_auth_scope" : "mock_snowflake_auth_scope",
-            "DM_Snowflake_client_ID": "mock_snowflake_client_id",
+            "DM_Snowflake_client_ID" : "mock_snowflake_client_id",
             "DM_Snowflake_client_secret" : "mock_snowflake_client_secret",
             "DM_Snowflake_grant_type" : "mock_client_credentials",
             "DM_Snowflake_Database" : "mock_snowfake-database",
