@@ -121,7 +121,7 @@ def process_pipeline(
             "DM_Snowflake_Azure_User_ID" : "9e33ff8b-da14-46ce-bcfb-d2bc6cdf9f23",
             "DM_Snowflake_Role" : "DATA_MANAGEMENT_RO_ROLE",
             "DM_Snowflake_Warehouse" : "BUSINESS_REPORTING_WH",
-            "DM_OSC_API_Account_Create" : "https://crowncastle-dev.crm.dynamics.com/api/data/v9.1/accounts",
+            "DM_OSC_API_Account_Create" : "https://crowncastle.crm.dynamics.com/api/data/v9.1/accounts",
             "DM_OSC_API_Token_Create_Url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token",
             "DM_OSC_API_Client_ID" : "d9f4fcfc-a3b0-49e7-8a74-c0770dd6e381",
             "DM_OSC_API_Client_Secret" : "CqZoRq_EzmvoEvP-_oN.s8.z21~J7p7ZeC",
