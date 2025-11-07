@@ -40,7 +40,7 @@ class Testsnowflake_io(unittest.TestCase):
         self.assertEqual(expected_url, expected_url)
 
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
-    def test_get_snowflake_access_token(self,  mock_get_secret):
+    def test_get_snowflake_access_token(self, mock_get_secret):
         # Mock the logger
        
         # Mock the get_secret method
