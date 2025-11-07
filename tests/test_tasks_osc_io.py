@@ -38,22 +38,22 @@ class testosc_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "snowflake_token_url" : "https://mock_token.url",
-            "snowflake_auth_scope" : "mock_snowflake_auth_scope",
-            "snowflake_client_id": "mock_snowflake_client_id",
-            "snowflake_client_secret" : "mock_snowflake_client_secret",
-            "snowflake_grant_type" : "mock_client_credentials",
-            "snowflake_database" : "mock_snowfake-database",
-            "snowflake_account" : "mock_snowflake_account",
-            "snowflake_user_id" : "mock_snowflake_user_id",
-            "snowflake_role" : "mock_snowflake_role",
-            "snowflake_warehouse" : "mock_snowflake_warehouse",
-            "osc_account" : "https://mock_osc_account.url",
-            "osc_token_url" : "https://mock_osc_taken.url",
-            "osc_client_id" : "mock_osc_client_id",
-            "osc_client_secret": "mock_osc_client_secret",
-            "osc_scope": "mock_osc_scope",
-            "osc_grant_type": "mock_osc_grant_type"
+            "DM_Snowflake_token_url" : "https://mock_token.url",
+            "DM_Snowflake_auth_scope" : "mock_snowflake_auth_scope",
+            "DM_Snowflake_client_ID": "mock_snowflake_client_id",
+            "DM_Snowflake_client_secret" : "mock_snowflake_client_secret",
+            "DM_Snowflake_grant_type" : "mock_client_credentials",
+            "DM_Snowflake_Database" : "mock_snowfake-database",
+            "DM_Snowflake_Account" : "mock_snowflake_account",
+            "DM_Snowflake_Azure_User_ID" : "mock_snowflake_user_id",
+            "DM_Snowflake_Role" : "mock_snowflake_role",
+            "DM_Snowflake_Warehouse" : "mock_snowflake_warehouse",
+            "DM_OSC_API_Account_Create" : "https://mock_osc_account.url",
+            "DM_OSC_API_Token_Create_Url" : "https://mock_osc_taken.url",
+            "DM_OSC_API_Client_ID" : "mock_osc_client_id",
+            "DM_OSC_API_Client_Secret": "mock_osc_client_secret",
+            "DM_OSC_API_Scope": "mock_osc_scope",
+            "DM_OSC_API_Grant_Type": "mock_osc_grant_type"
         }
         
         # Mock the response from the requests.post call

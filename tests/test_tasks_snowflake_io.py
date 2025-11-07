@@ -45,11 +45,22 @@ class Testsnowflake_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "grant_type": "mock_client_credentials",
-            "client_id": "mock_client_id",
-            "client_secret": "mock_client_secret",
-            "base_url": "https://mock_env.api.crm.dynamics.com",
-            "scope": "mock_scope"
+            "DM_Snowflake_token_url" : "https://mock_token.url",
+            "DM_Snowflake_auth_scope" : "mock_snowflake_auth_scope",
+            "DM_Snowflake_client_ID": "mock_snowflake_client_id",
+            "DM_Snowflake_client_secret" : "mock_snowflake_client_secret",
+            "DM_Snowflake_grant_type" : "mock_client_credentials",
+            "DM_Snowflake_Database" : "mock_snowfake-database",
+            "DM_Snowflake_Account" : "mock_snowflake_account",
+            "DM_Snowflake_Azure_User_ID" : "mock_snowflake_user_id",
+            "DM_Snowflake_Role" : "mock_snowflake_role",
+            "DM_Snowflake_Warehouse" : "mock_snowflake_warehouse",
+            "DM_OSC_API_Account_Create" : "https://mock_osc_account.url",
+            "DM_OSC_API_Token_Create_Url" : "https://mock_osc_taken.url",
+            "DM_OSC_API_Client_ID" : "mock_osc_client_id",
+            "DM_OSC_API_Client_Secret": "mock_osc_client_secret",
+            "DM_OSC_API_Scope": "mock_osc_scope",
+            "DM_OSC_API_Grant_Type": "mock_osc_grant_type"
         }
         
         # Mock the response from the requests.post call
@@ -99,16 +110,22 @@ class Testsnowflake_io(unittest.TestCase):
     def test_return_connection(self, mock_connect):
         # Setup secret_data
         secret_data = {
-            "User_ID": "mock_User_id",
-            "grant_type": "mock_client_credentials",
-            "client_ID": "mock_client_id",
-            "client_secret": "mock_client_secret",
-            "scope": "mock_scope",
-            "token_url": "https://token.url",
-            "Role": "mock_ole",
-            "Account": "mock_acount",
-            "Warehouse": "mock_warehouse",
-            "Database": "mock_database"
+            "DM_Snowflake_token_url" : "https://mock_token.url",
+            "DM_Snowflake_auth_scope" : "mock_snowflake_auth_scope",
+            "DM_Snowflake_client_ID": "mock_snowflake_client_id",
+            "DM_Snowflake_client_secret" : "mock_snowflake_client_secret",
+            "DM_Snowflake_grant_type" : "mock_client_credentials",
+            "DM_Snowflake_Database" : "mock_snowfake-database",
+            "DM_Snowflake_Account" : "mock_snowflake_account",
+            "DM_Snowflake_Azure_User_ID" : "mock_snowflake_user_id",
+            "DM_Snowflake_Role" : "mock_snowflake_role",
+            "DM_Snowflake_Warehouse" : "mock_snowflake_warehouse",
+            "DM_OSC_API_Account_Create" : "https://mock_osc_account.url",
+            "DM_OSC_API_Token_Create_Url" : "https://mock_osc_taken.url",
+            "DM_OSC_API_Client_ID" : "mock_osc_client_id",
+            "DM_OSC_API_Client_Secret": "mock_osc_client_secret",
+            "DM_OSC_API_Scope": "mock_osc_scope",
+            "DM_OSC_API_Grant_Type": "mock_osc_grant_type"
         }
         # Mock access token
         self.snowflake_io_instance.get_snowflake_access_token = MagicMock(return_value="mocked_token")
