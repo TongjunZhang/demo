@@ -94,7 +94,6 @@ class osc_io:
             'Prefer': 'return=representation'
         }
         # Make POST request to create account
-        # response = requests.request("POST", url, headers=headers, data=payload_data, verify=False)
         _, response = HttpsIo(logger=self.logger).http_request(
             http_method='POST',
             http_url=secret_data["DM_OSC_API_Token_Create_Url"],

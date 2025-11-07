@@ -196,7 +196,13 @@ def process_pipeline(
 
         if not oscresponse.get('accountnumber'):
             try:
-                snowflake_io.update_osc_account(snowfalke_connect,oscresponse.get('accountnumber'), row[0])
+                snowflake_io(
+                    args=args_u,
+                    logger=logger,
+                    pipeline_id=pipeline_id
+                ).update_osc_account(connect=snowfalke_connect,
+                                     accountnumber=oscresponse.get('accountnumber'), 
+                                     zoominfo_company_id=row[0])
                 snowfalke_connect.close()
             except Exception as e:
                 logger.error(f"Error updating OSC account in Snowflake: {e}")
