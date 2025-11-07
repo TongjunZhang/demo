@@ -110,7 +110,7 @@ def process_pipeline(
             "DM_OSC_API_Grant_Type" : "client_credentials",
             "DM_OSC_API_Resource" : "https://crowncastle-dev.crm.dynamics.com"
         }
-    elif args_u.env == 'prd':
+    elif args_u.env == 'prod':
         secret_data = {
             "DM_Snowflake_token_url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/v2.0/token",
             "DM_Snowflake_auth_scope" : "https://crowncastle.com/bde23c60-815b-4bcb-86ff-95b5d57bf3fd-SnowflakeOAuthForServiceAccounts/.default",
