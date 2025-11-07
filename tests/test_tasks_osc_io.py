@@ -38,11 +38,22 @@ class testosc_io(unittest.TestCase):
        
         # Mock the get_secret method
         mock_get_secret.return_value = {
-            "grant_type": "mock_client_credentials",
-            "client_id": "mock_client_id",
-            "client_secret": "mock_client_secret",
-            "base_url": "https://token.url",
-            "scope" :  "mock_scope" #todo:change
+            "snowflake_token_url" : "https://mock_token.url",
+            "snowflake_auth_scope" : "mock_snowflake_auth_scope",
+            "snowflake_client_id": "mock_snowflake_client_id",
+            "snowflake_client_secret" : "mock_snowflake_client_secret",
+            "snowflake_grant_type" : "mock_client_credentials",
+            "snowflake_database" : "mock_snowfake-database",
+            "snowflake_account" : "mock_snowflake_account",
+            "snowflake_user_id" : "mock_snowflake_user_id",
+            "snowflake_role" : "mock_snowflake_role",
+            "snowflake_warehouse" : "mock_snowflake_warehouse",
+            "osc_account" : "https://mock_osc_account.url",
+            "osc_token_url" : "https://mock_osc_taken.url",
+            "osc_client_id" : "mock_osc_client_id",
+            "osc_client_secret": "mock_osc_client_secret",
+            "osc_scope": "mock_osc_scope",
+            "osc_grant_type": "mock_osc_grant_type"
         }
         
         # Mock the response from the requests.post call
