@@ -4,7 +4,7 @@ from tasks.aws_snowflake_io import AwsSnowflakeIo
 from unittest.mock import patch, MagicMock
 
 class TestAwsSnowflakeIo(unittest.TestCase):
-    @patch('tasks.snowflake_io.boto3.session.Session')
+    @patch('tasks.aws_snowflake_io.boto3.session.Session')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
         self.mock_args = MagicMock()
@@ -28,14 +28,6 @@ class TestAwsSnowflakeIo(unittest.TestCase):
 
         # Create an instance of DynamicsIO with the mocked logger and argparse namespace
         self.snowflake_io_instance = AwsSnowflakeIo(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
-
-    # def test_add_filter_with_watermark(self):
-    #     url = "https://example.com/api/data"
-    #     watermark = "2023-01-01T00:00:00Z"
-    #     expected_url = f"{url}?$filter=modifiedon gt {watermark}"
-        
-    #     # result = self.snowflake_io_instance.add_filter(url, watermark)
-    #     self.assertEqual(expected_url, expected_url)
 
     @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_get_snowflake_access_token(self, mock_get_secret):
@@ -104,7 +96,7 @@ class TestAwsSnowflakeIo(unittest.TestCase):
         self.mock_logger.error.assert_called_once()
         self.assertIsNone(result)
 
-    # @patch('tasks.snowflake_io.snowflake.connector.connect')
+    # @patch('tasks.aws_snowflake_io.snowflake.connector.connect')
     # def test_return_connection(self, mock_connect):
     #     # Setup secret_data
     #     secret_data = {

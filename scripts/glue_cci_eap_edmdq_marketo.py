@@ -10,8 +10,8 @@ if not hasattr(urllib3.util.ssl_, 'DEFAULT_CIPHERS'):
 import logging
 import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
-from tasks.aws_snowflake_io import snowflake_io
-from tasks.osc_account_io import osc_io
+from tasks.aws_snowflake_io import AwsSnowflakeIo
+from tasks.osc_account_io import OscAccountIo
 from tasks.utils import get_pipeline_execution_id
 import concurrent.futures
 import json
@@ -137,7 +137,7 @@ def process_pipeline(
     zoomInfo_rows = None
     snowfalke_connect = None
     try:
-        snowfalke_connect = snowflake_io(
+        snowfalke_connect = AwsSnowflakeIo(
             args=args_u,
             logger=logger,
             pipeline_id=pipeline_id  #,
@@ -147,7 +147,7 @@ def process_pipeline(
         logger.info(f"Error getting snowflake connection: {e}")
     try:
         # Fetch entity data from Snowflake
-        zoomInfo_rows = snowflake_io(
+        zoomInfo_rows = AwsSnowflakeIo(
             args=args_u,
             logger=logger,
             pipeline_id=pipeline_id  #,
@@ -178,7 +178,7 @@ def process_pipeline(
         oscresponse = None
         try:
             # Send payload data to OSC
-            oscresponse = osc_io(
+            oscresponse = OscAccountIo(
                 args=args_u,
                 logger=logger,
                 pipeline_id=pipeline_id
@@ -192,7 +192,7 @@ def process_pipeline(
         accountnumber = oscresponse.get('accountnumber')
         if  accountnumber is not None:
             try:
-                snowflake_io(
+                AwsSnowflakeIo(
                     args=args_u,
                     logger=logger,
                     pipeline_id=pipeline_id
