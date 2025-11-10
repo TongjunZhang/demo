@@ -84,7 +84,7 @@ class MarketoETL:
             "address1_composite": "123 Canonsburg 15317"
         })
 
-        self.logger.info('put item from Snowflake: %s' % (row[0]))
+        self.logger.info('put item from Snowflake zoominfo: %s' % (row[0]))
 
         return payload
 
