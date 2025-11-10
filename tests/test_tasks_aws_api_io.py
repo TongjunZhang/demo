@@ -26,7 +26,7 @@ class TestMarketoETL(unittest.TestCase):
         self.MarketoETL_io = MarketoETL(args=self.args, boto3_session=self.mock_session)
         # self.secret_data = SecretsManagerIO.get_secret(self.args.secret_name)
 
-    # @patch('tasks.snowflake_io.transfer_entity_data')
+    # @patch('tasks.aws_snowflake_io.transfer_entity_data')
     #@patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     def test_put_item(self):
         """Test putting an item into DynamoDB table"""
