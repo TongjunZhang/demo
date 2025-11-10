@@ -1,0 +1,16 @@
+### Allow team intended to work on project to make changes
+*               @dnd_engineering/GitHub-Owner-DD-EAP-DeTerminators
+
+### Mandate reviews from EDP team upon changes to .github/* (CODEOWNERS, etc)
+.github/*       @dnd_engineering/GitHub-Engineer-DD-ENGR-Infinity
+
+### Mandate reviews from EDP team upon changes to .harness/*
+.harness/*      @dnd_engineering/GitHub-Engineer-DD-ENGR-Infinity
+
+
+### Mandate reviews from CPE team upon changes to any Terraform/Terragrunt files
+*.tf            @dnd_engineering/GitHub-Engineer-DD-ENGR-Chaos_Prevention_Enthusiasts
+*.tfvars        @dnd_engineering/GitHub-Engineer-DD-ENGR-Chaos_Prevention_Enthusiasts
+*.tfstate       @dnd_engineering/GitHub-Engineer-DD-ENGR-Chaos_Prevention_Enthusiasts
+terragrunt.hcl  @dnd_engineering/GitHub-Engineer-DD-ENGR-Chaos_Prevention_Enthusiasts
+

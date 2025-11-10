@@ -1,0 +1,25 @@
+inputSet:
+  name: on_push_input_set
+  identifier: on_push_input_set
+  tags: {}
+  orgIdentifier: eap
+  projectIdentifier: eap_support_tools
+  pipeline:
+    identifier: cci_eap_edmdq_marketo
+    template:
+      templateInputs:
+        properties:
+          ci:
+            codebase:
+              build:
+                type: branch
+                spec:
+                  branch: <+trigger.branch>
+        variables:
+          - name: SONAR_LOG_LEVEL
+            type: String
+            value: INFO
+          - name: SONAR_PYTHON_VERSION
+            type: String
+            value: "3.9"
+
