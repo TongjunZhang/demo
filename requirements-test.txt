@@ -1,4 +1,5 @@
 snowflake
 pytest
+pytest-cov
 
 
