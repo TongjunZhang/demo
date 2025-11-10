@@ -29,13 +29,13 @@ class TestAwsSnowflakeIo(unittest.TestCase):
         # Create an instance of DynamicsIO with the mocked logger and argparse namespace
         self.snowflake_io_instance = AwsSnowflakeIo(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
 
-    def test_add_filter_with_watermark(self):
-        url = "https://example.com/api/data"
-        watermark = "2023-01-01T00:00:00Z"
-        expected_url = f"{url}?$filter=modifiedon gt {watermark}"
+    # def test_add_filter_with_watermark(self):
+    #     url = "https://example.com/api/data"
+    #     watermark = "2023-01-01T00:00:00Z"
+    #     expected_url = f"{url}?$filter=modifiedon gt {watermark}"
         
-        # result = self.snowflake_io_instance.add_filter(url, watermark)
-        self.assertEqual(expected_url, expected_url)
+    #     # result = self.snowflake_io_instance.add_filter(url, watermark)
+    #     self.assertEqual(expected_url, expected_url)
 
     # @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     # def test_get_snowflake_access_token(self, mock_get_secret):
