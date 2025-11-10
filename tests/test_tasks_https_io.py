@@ -1,6 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from tasks.osc_io import HttpsIo
+from tasks.osc_account_io import HttpsIo
+
 
 class TestHttpsIo(unittest.TestCase):
     @patch('tasks.https_io.requests.Session')
