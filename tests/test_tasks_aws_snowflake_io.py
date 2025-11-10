@@ -1,9 +1,9 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from tasks.aws_snowflake_io import aws_snowflake_io
+from tasks.aws_snowflake_io import AwsSnowflakeIo
 from unittest.mock import patch, MagicMock
 
-class Testsnowflake_io(unittest.TestCase):
+class TestAwsSnowflakeIo(unittest.TestCase):
     @patch('tasks.snowflake_io.boto3.session.Session')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
@@ -27,7 +27,7 @@ class Testsnowflake_io(unittest.TestCase):
         self.mock_logger = MagicMock()
 
         # Create an instance of DynamicsIO with the mocked logger and argparse namespace
-        self.snowflake_io_instance = aws_snowflake_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
+        self.snowflake_io_instance = AwsSnowflakeIo(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
 
     def test_add_filter_with_watermark(self):
         url = "https://example.com/api/data"
@@ -72,7 +72,7 @@ class Testsnowflake_io(unittest.TestCase):
     #     self.assertIsNotNone(snowflake_access_token)
 
     # @patch('tasks.https_io.HttpsIo.http_request')
-    # @patch('tasks.snowflake_io.set_headers')
+    # @patch('tasks.aws_snowflake_io.set_headers')
     def test_transfer_entity_data_returns_rows(self):
         # Mock connection and cursor
         mock_connect = MagicMock()
