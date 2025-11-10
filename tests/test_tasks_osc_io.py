@@ -1,6 +1,10 @@
 import unittest
 from unittest.mock import patch, MagicMock
+<<<<<<< HEAD
 from tasks.osc_account_io import osc_account_io
+=======
+from tasks.osc_io import osc_io
+>>>>>>> main
 # import pytest
 
 
@@ -30,7 +34,11 @@ class testosc_io(unittest.TestCase):
         self.mock_logger = MagicMock()
 
         # Create an instance of osc_io with the mocked logger and argparse namespace
+<<<<<<< HEAD
         self.osc_io_instance = osc_account_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
+=======
+        self.osc_io_instance = osc_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
+>>>>>>> main
 
     # @patch('tasks.aws_api_io.SecretsManagerIO.get_secret')
     # def test_get_osc_access_token(self,  mock_get_secret):

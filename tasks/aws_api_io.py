@@ -84,7 +84,11 @@ class MarketoETL:
             "address1_composite": "123 Canonsburg 15317"
         })
 
+<<<<<<< HEAD
         self.logger.info('put item from Snowflake zoominfo: %s' % (row[0]))
+=======
+        self.logger.info('put item from Snowflake: %s' % (row[0]))
+>>>>>>> main
 
         return payload
 
@@ -108,7 +112,11 @@ class SecretsManagerIO:
         self.logger = logging.getLogger() if logger is None else logger
         self.args_u=args
 
+<<<<<<< HEAD
     def get_secret(self, secret_name: str = None):
+=======
+    def get_secret(self, secret_name: str = None) -> Dict:
+>>>>>>> main
         """
         Retrieve a secret from AWS Secrets Manager.
 
@@ -118,7 +126,10 @@ class SecretsManagerIO:
         Returns:
             Dict: The secret value as a dictionary.
         """
+<<<<<<< HEAD
         secret = None
+=======
+>>>>>>> main
         self.logger.info("Getting secret %s" % secret_name)
         try:
             response = self.client.get_secret_value(SecretId=secret_name)
@@ -127,4 +138,8 @@ class SecretsManagerIO:
             return secret
         except ClientError as e:
             self.logger.error(f"Failed to fetch secret for {secret_name}: {e}")
+<<<<<<< HEAD
             return secret
+=======
+            return None
+>>>>>>> main

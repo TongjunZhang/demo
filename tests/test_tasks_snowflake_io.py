@@ -1,6 +1,10 @@
 import unittest
 from unittest.mock import patch, MagicMock
+<<<<<<< HEAD
 from tasks.aws_snowflake_io import snowflake_io
+=======
+from tasks.snowflake_io import snowflake_io
+>>>>>>> main
 from unittest.mock import patch, MagicMock
 # import pytest
 

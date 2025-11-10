@@ -1,12 +1,21 @@
 from setuptools import setup, find_packages
 
 setup(
+<<<<<<< HEAD
     name="cci-eap-edmdq-marketo",
     version="0.1.0",
     packages=find_packages(include=['tasks','tasks.utils', 
                                     'tasks','tasks.aws_api_io', 
                                     'tasks','tasks.aws_snowflake_io',
                                     'tasks','tasks.osc_account_io',
+=======
+    name="cci_eap_glue_marketo",
+    version="0.1.0",
+    packages=find_packages(include=['tasks','tasks.utils', 
+                                    'tasks','tasks.aws_api_io', 
+                                    'tasks','tasks.snowflake_io',
+                                    'tasks','tasks.osc_io',
+>>>>>>> main
                                     'tasks','tasks.https_io']),
     include_package_data=True,
     install_requires=[],
