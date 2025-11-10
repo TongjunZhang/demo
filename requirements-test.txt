@@ -1,4 +1,5 @@
 snowflake
 unittest
 pytest
+Python <3.11,>=3.8
 
