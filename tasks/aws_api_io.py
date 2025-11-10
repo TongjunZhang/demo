@@ -3,7 +3,6 @@
 import boto3
 from typing import Dict
 from botocore.exceptions import ClientError
-from boto3.dynamodb.conditions import Key, Attr
 import logging
 import json
 import argparse
@@ -48,7 +47,6 @@ class MarketoETL:
         Returns:
             str: the latest watermark
         """
-        default_watermark = "1969-01-01T00:00:00Z"
         watermark = str(datetime.now()) + "_" + pipeline_id
         self.logger.info('searching by partition key for pipeline_id: %s' % pipeline_id)
   

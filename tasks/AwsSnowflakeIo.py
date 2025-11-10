@@ -1,5 +1,4 @@
 # tasks/snowflake_io.py
-
 from tasks.https_io import HttpsIo
 import logging
 import boto3
