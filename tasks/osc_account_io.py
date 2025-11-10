@@ -6,7 +6,7 @@ import logging
 import argparse
 import boto3
 
-class osc_io:
+class osc_account_io:
     """
     Class to interact with OSC (Oracle Service Cloud) and handle API requests,
     authentication, and payload management.
@@ -78,7 +78,7 @@ class osc_io:
         self.logger.info('Access token being requested / replaced')
         return my_access_token
 
-    def create_OSC_Account(self, payload_data: str, secret_data: dict) -> dict:
+    def create_osc_account(self, payload_data: str, secret_data: dict) -> dict:
         """
         Create an account in OSC using the provided payload and access token.
 

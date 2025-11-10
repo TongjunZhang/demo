@@ -10,8 +10,8 @@ if not hasattr(urllib3.util.ssl_, 'DEFAULT_CIPHERS'):
 import logging
 import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
-from tasks.snowflake_io import snowflake_io
-from tasks.osc_io import osc_io
+from tasks.aws_snowflake_io import snowflake_io
+from tasks.osc_account_io import osc_io
 from tasks.utils import get_pipeline_execution_id, get_max_dynamics_datetime
 import concurrent.futures
 import json
@@ -182,7 +182,7 @@ def process_pipeline(
                 args=args_u,
                 logger=logger,
                 pipeline_id=pipeline_id
-            ).create_OSC_Account(
+            ).create_osc_account(
                 payload_data=payload,
                 secret_data=secret_data
             )

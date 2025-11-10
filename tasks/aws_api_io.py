@@ -108,7 +108,7 @@ class SecretsManagerIO:
         self.logger = logging.getLogger() if logger is None else logger
         self.args_u=args
 
-    def get_secret(self, secret_name: str = None) -> Dict:
+    def get_secret(self, secret_name: str = None):
         """
         Retrieve a secret from AWS Secrets Manager.
 
