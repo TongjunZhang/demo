@@ -128,6 +128,6 @@ class SecretsManagerIO:
             return secret
         except ClientError as e:
             self.logger.error(f"Failed to fetch secret for {secret_name}: {e}")
-            return secret
+            return None
 
 
