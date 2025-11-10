@@ -118,6 +118,7 @@ class SecretsManagerIO:
         Returns:
             Dict: The secret value as a dictionary.
         """
+        secret = None
         self.logger.info("Getting secret %s" % secret_name)
         try:
             response = self.client.get_secret_value(SecretId=secret_name)
@@ -126,4 +127,4 @@ class SecretsManagerIO:
             return secret
         except ClientError as e:
             self.logger.error(f"Failed to fetch secret for {secret_name}: {e}")
-            return None
+            return secret
