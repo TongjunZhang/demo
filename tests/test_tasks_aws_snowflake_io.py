@@ -1,9 +1,7 @@
 import unittest
 from unittest.mock import patch, MagicMock
-from tasks.aws_snowflake_io import aws_snowflake_io
+from tasks.aws_snowflake_io import Aws_Snowflake_io
 from unittest.mock import patch, MagicMock
-# import pytest
-
 
 class Testsnowflake_io(unittest.TestCase):
     @patch('tasks.snowflake_io.boto3.session.Session')
@@ -29,7 +27,7 @@ class Testsnowflake_io(unittest.TestCase):
         self.mock_logger = MagicMock()
 
         # Create an instance of DynamicsIO with the mocked logger and argparse namespace
-        self.snowflake_io_instance = aws_snowflake_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
+        self.snowflake_io_instance = Aws_Snowflake_io(boto3_session=mock_session, args=self.mock_args, logger=self.mock_logger, pipeline_id=self.pipeline_id, execution_id="mock_execution_id")
 
     def test_add_filter_with_watermark(self):
         url = "https://example.com/api/data"
