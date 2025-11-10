@@ -183,7 +183,6 @@ def process_pipeline(
                 logger=logger,
                 pipeline_id=pipeline_id
             ).create_osc_account(
-
                 payload_data=payload,
                 secret_data=secret_data
             )
