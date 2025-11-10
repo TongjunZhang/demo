@@ -3,7 +3,11 @@ inputSet:
   identifier: on_push_input_set
   tags: {}
   orgIdentifier: eap
+<<<<<<< HEAD
   projectIdentifier: enterprise_data_management
+=======
+  projectIdentifier: eap_support_tools
+>>>>>>> main
   pipeline:
     identifier: cci_eap_edmdq_marketo
     template:
