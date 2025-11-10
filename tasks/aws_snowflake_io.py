@@ -9,7 +9,7 @@ import json
 EXECUTION_STAGE = 0
 EXECUTION_STATE = 1
 
-class aws_snowflake_io:
+class AwsSnowflakeIo:
     """
     Class to interact with Snowflake, handle authentication, and process entity data.
     """

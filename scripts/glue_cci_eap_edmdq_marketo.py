@@ -12,7 +12,7 @@ import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
 from tasks.aws_snowflake_io import snowflake_io
 from tasks.osc_account_io import osc_io
-from tasks.utils import get_pipeline_execution_id, get_max_dynamics_datetime
+from tasks.utils import get_pipeline_execution_id
 import concurrent.futures
 import json
 
