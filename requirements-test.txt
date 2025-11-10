@@ -1,16 +1,6 @@
-<<<<<<< HEAD
 snowflake
 urllib3
 botocore
 unittest
 pytest
-=======
-requests
-boto3
-snowflake_connector_python
-urllib3
-botocore
-datetime
-pytest-cov==5.0.0
-moto==4.2.13
->>>>>>> main
+
