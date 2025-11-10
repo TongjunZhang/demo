@@ -4,7 +4,7 @@ from tasks.aws_snowflake_io import AwsSnowflakeIo
 from unittest.mock import patch, MagicMock
 
 class TestAwsSnowflakeIo(unittest.TestCase):
-    @patch('tasks.snowflake_io.boto3.session.Session')
+    @patch('tasks.aws_snowflake_io.boto3.session.Session')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
         self.mock_args = MagicMock()
@@ -96,7 +96,7 @@ class TestAwsSnowflakeIo(unittest.TestCase):
         self.mock_logger.error.assert_called_once()
         self.assertIsNone(result)
 
-    @patch('tasks.snowflake_io.snowflake.connector.connect')
+    @patch('tasks.aws_snowflake_io.snowflake.connector.connect')
     def test_return_connection(self, mock_connect):
         # Setup secret_data
         secret_data = {

@@ -5,8 +5,8 @@ from tasks.osc_account_io import OscAccountIo
 
 
 class testOscAccountIo(unittest.TestCase):
-    @patch('tasks.osc_io.boto3.session.Session')
-    # @patch('tasks.osc_account_io.logging.getLogger')
+    @patch('tasks.osc_account_io.boto3.session.Session')
+    @patch('tasks.osc_account_io.logging.getLogger')
     def setUp(self, mock_session):
         # Mock the argparse.Namespace object
         self.mock_args = MagicMock()
