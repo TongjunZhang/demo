@@ -5,7 +5,7 @@ setup(
     version="0.1.0",
     packages=find_packages(include=['tasks','tasks.utils', 
                                     'tasks','tasks.aws_api_io', 
-                                    'tasks','tasks.snowflake_io',
+                                    'tasks','tasks.aws_snowflake_io',
                                     'tasks','tasks.osc_account_io',
                                     'tasks','tasks.https_io']),
     include_package_data=True,
