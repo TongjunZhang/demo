@@ -2,8 +2,6 @@ import unittest
 from unittest.mock import patch, MagicMock
 from tasks.osc_account_io import Osc_Account_io
 
-# import pytest
-
 
 
 class testosc_io(unittest.TestCase):

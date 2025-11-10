@@ -1,4 +1,4 @@
-# tasks/snowflake_io.py
+# tasks/aws_snowflake_io.py
 from tasks.https_io import HttpsIo
 import logging
 import boto3
@@ -9,7 +9,7 @@ import json
 EXECUTION_STAGE = 0
 EXECUTION_STATE = 1
 
-class AwsSnowflakeIo:
+class aws_snowflake_io:
     """
     Class to interact with Snowflake, handle authentication, and process entity data.
     """
