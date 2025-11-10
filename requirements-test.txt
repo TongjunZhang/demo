@@ -1,6 +1,8 @@
-boto3
-moto
 requests
+boto3
+snowflake_connector_python
 urllib3
-unitest
-pytest
+botocore
+datetime
+pytest-cov==5.0.0
+moto==4.2.13

@@ -1,12 +1,13 @@
 # tasks/snowflake_io.py
 
 from tasks.https_io import HttpsIo
-from tasks.aws_api_io import SecretsManagerIO, MarketoETL
+# from tasks.aws_api_io import SecretsManagerIO, MarketoETL
 import logging
 import boto3
 import argparse
 import snowflake.connector
-from tasks.osc_io import osc_io
+# from tasks.osc_io import osc_io
+import json
 
 EXECUTION_STAGE = 0
 EXECUTION_STATE = 1
@@ -17,7 +18,7 @@ class snowflake_io:
     """
     def __init__(
         self,
-        args: argparse.Namespace = None,
+        args: argparse.Namespace,
         logger: logging.Logger = None,
         boto3_session: boto3.session.Session = None,
         pipeline_id: str = None,
@@ -38,28 +39,10 @@ class snowflake_io:
         self.args = args
         self.pipeline_id = pipeline_id
         # Remove prefix from pipeline_id for processing
-        self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_nonprod_DQ_', '') if self.pipeline_id else None
+        self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
-    def set_headers(self, access_token: str) -> dict:
-        """
-        Set headers for Snowflake API requests.
-
-        Args:
-            access_token (str): Bearer token for authentication.
-
-        Returns:
-            dict: Headers for the request.
-        """
-        return {
-            'Authorization': f'Bearer {access_token}',
-            'OData-MaxVersion': '4.0',
-            'OData-Version': '4.0',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-
-    def get_access_token(
+    def get_snowflake_access_token(
         self,
         secret_data: dict,
         access_token: str = None
@@ -74,26 +57,27 @@ class snowflake_io:
         Returns:
             str: Access token string.
         """
-        my_access_token = access_token
-        if not my_access_token:
-            headers = {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-            payload = {
-                'grant_type': secret_data["DM_Snowflake_grant_type"],
-                'client_id': secret_data["DM_Snowflake_client_ID"],
-                'client_secret': secret_data["DM_Snowflake_client_secret"],
-                'scope': secret_data["DM_Snowflake_auth_scope"]
-            }
-            # Make POST request to obtain access token
-            _, response = HttpsIo(logger=self.logger).http_request(
-                http_method='POST',
-                http_url=secret_data.get('DM_Snowflake_token_url'),
-                http_head=headers,
-                http_data=payload
-            )
-            self.logger.info('Access token being requested / replaced')
-            my_access_token = response.json().get('access_token', "")
+        my_access_token = None
+        self.logger.info('getting snowflake access token')
+        headers = {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+        payload = {
+            'grant_type': secret_data["DM_Snowflake_grant_type"],
+            'client_id': secret_data["DM_Snowflake_client_ID"],
+            'client_secret': secret_data["DM_Snowflake_client_secret"],
+            'scope': secret_data["DM_Snowflake_auth_scope"]
+        }
+        # Make POST request to obtain access token
+        _, response = HttpsIo(logger=self.logger).http_request(
+            http_method='POST',
+            http_url=secret_data.get('DM_Snowflake_token_url'),
+            http_head=headers,
+            http_data=payload
+        )
+        response_value = response.json()
+        my_access_token = response_value.get('access_token')
+        self.logger.info('Access token being requested / replaced')
         return my_access_token
 
     def return_connection(self, secret_data) -> snowflake.connector.connection.SnowflakeConnection:
@@ -106,26 +90,26 @@ class snowflake_io:
         Returns:
             SnowflakeConnection: Active Snowflake connection.
         """
+        access_token = self.get_snowflake_access_token(secret_data=secret_data)
+
         ctx = snowflake.connector.connect(
-            user='0baab986-1a68-4191-953b-147d8fc0c71c',     # Replace with secret_data["DM_Snowflake_User_ID"]
-            role="DATA_MANAGEMENT_RO_ROLE",                  # Replace with secret_data['DM_Snowflake_role']
-            account="ccic-mainnew",                          # Replace with secret_data['DM_Snowflake_account']
-            warehouse="BUSINESS_REPORTING_WH",               # Replace with secret_data['DM_Snowflake_warehouse']
-            database="CDWDEV",                               # Replace with secret_data['DM_Snowflake_database']
-            schema="DATA_MANAGEMENT",                        # Replace with secret_data['DM_Snowflake_schema']
-            autocommit=True,                                 # Replace with secret_data['DM_Snowflake_autocommit']
-            authenticator="OAuth",                           # Replace with secret_data['DM_Snowflake_authenticator']
-            token=self.get_access_token(self.get_secret(self.args.secret_name))
+            user=secret_data["DM_Snowflake_Azure_User_ID"],
+            role=secret_data["DM_Snowflake_Role"],                  
+            account=secret_data["DM_Snowflake_Account"],                          
+            warehouse=secret_data["DM_Snowflake_Warehouse"],               
+            database=secret_data['DM_Snowflake_Database'],                 
+            schema="DATA_MANAGEMENT",                        
+            autocommit=True,                                
+            authenticator="OAuth",                           
+            token=access_token
         )
         return ctx
+       
 
     def transfer_entity_data(
         self,
-        watermark: str = None,
-        secret_data: dict = None,
-        access_token: str = None,
-        source: str = 'snowflake'
-    ):
+        connect: snowflake.connector.connection.SnowflakeConnection = None
+    ) -> list:
         """
         Fetch entity data from Snowflake and process it for OSC.
 
@@ -138,31 +122,27 @@ class snowflake_io:
         Returns:
             None
         """
-        connect = self.return_connection(secret_data)
         datacursor = connect.cursor()
         rows = None
         try:
-            # Query for rows where ZOOMINFO_COMPANY_ID is NULL
-            datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ZOOMINFO_COMPANY_ID IS NULL")
+            # Query for rows where ACCOUNT_NUMBER is NULL
+            datacursor.execute("SELECT * FROM MARKETO_ACCOUNT_TO_OSC WHERE ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER =''")
             rows = datacursor.fetchall()
-            oscaccesstoken = None
-            for row in rows:
-                # Create payload and send to OSC
-                inpayload = MarketoETL.put_item(row)
-                rt = osc_io.create_OSC_Account(inpayload, oscaccesstoken)
-                accountnumber = rt.get('accountnumber')
-                # Update Snowflake table with new account number
-                sqlstr = (
-                    "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" +
-                    f'{accountnumber}' +
-                    "' WHERE ZOOMINFO_COMPANY_ID = '" +
-                    f'{row[0]}' +
-                    "'"
-                )
-                datacursor.execute(sqlstr)
-                datacursor.execute("COMMIT")
-                print(accountnumber)
-                self.logger.info("logging info: Account number:" + f'{accountnumber}')
+            self.logger.info('got zoominfo data')
+            datacursor.close()
         except Exception as e:
             self.logger.error(f"Error getting execution data from ZoomInfo table: {e}")
-            return
+        return rows
+
+    def update_osc_account(self,
+        # watermark: str = None,
+        connect: snowflake.connector.connection.SnowflakeConnection = None,
+        accountnumber: str = None,
+        zoominfo_company_id:str = None
+        ):
+        datacursor = connect.cursor()
+        sqlstr = "UPDATE MARKETO_ACCOUNT_TO_OSC SET ACCOUNT_NUMBER = '" + f'{accountnumber}' + "' WHERE ZOOMINFO_COMPANY_ID = '" + f'{zoominfo_company_id}' + "' AND (ACCOUNT_NUMBER IS NULL OR ACCOUNT_NUMBER ='')"
+        datacursor.execute(sqlstr)
+        datacursor.execute("COMMIT")
+        datacursor.close()
+        self.logger.info('account number: '+ accountnumber)

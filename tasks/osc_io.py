@@ -38,7 +38,7 @@ class osc_io:
         self.pipeline_id_processing = self.pipeline_id.replace('Marketo_Snowflake_OSC_nonprod_DQ_', '') if self.pipeline_id else None
         self.execution_id = execution_id
 
-    def get_access_token(
+    def get_osc_access_token(
             self,
             secret_data: dict,
             access_token: str = None
@@ -53,48 +53,32 @@ class osc_io:
         Returns:
             str: Access token string.
         """
-        my_access_token = access_token
-        if not my_access_token:
-            headers = {
-                "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
-                "Accept": "application/json"
-            }
-            payload = {
-                'grant_type': 'client_credentials',
-                'client_id': 'db80b2c6-bfdc-49af-9627-f63b73b85ada',
-                'client_secret': 'PBTRXCa6lnE_-G6M5S-e8H5T0ek5.A3E-D',
-                'scope': 'https://vault.azure.net/.default'
-            }
+        my_access_token = None
+        headers = {
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+            "Accept": "application/json"
+        }
+        payload = {
+            'grant_type': secret_data["DM_OSC_API_Grant_Type"],
+            'client_id': secret_data["DM_OSC_API_Client_ID"],
+            'client_secret': secret_data["DM_OSC_API_Client_Secret"],
+            'scope': secret_data["DM_OSC_API_Scope"],
+            'resource': secret_data["DM_OSC_API_Resource"]
+        }
+        self.logger.info(payload)
             # Make POST request to obtain access token
-            _, response = HttpsIo(logger=self.logger).http_request(
-                http_method='POST',
-                http_url='https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token',
-                http_head=headers,
-                http_data=payload
-            )
-            self.logger.info('Access token being requested / replaced')
-            my_access_token = response.json().get('access_token', "")
+        _, response = HttpsIo(logger=self.logger).http_request(
+            http_method='POST',
+            http_url=secret_data["DM_OSC_API_Token_Create_Url"],
+            http_head=headers,
+            http_data=payload
+        )
+        response_value = response.json()
+        my_access_token = response_value.get('access_token')
+        self.logger.info('Access token being requested / replaced')
         return my_access_token
 
-    def set_headers(self, access_token: str) -> dict:
-        """
-        Set headers for OSC API requests.
-
-        Args:
-            access_token (str): Bearer token for authentication.
-
-        Returns:
-            dict: Headers for the request.
-        """
-        return {
-            'Authorization': f'Bearer {access_token}',
-            'OData-MaxVersion': '4.0',
-            'OData-Version': '4.0',
-            'Accept': 'application/json',
-            'Content-Type': 'application/json; charset=utf-8'
-        }
-
-    def create_OSC_Account(self, payload_data: str, access_token: str) -> dict:
+    def create_OSC_Account(self, payload_data: str, secret_data: dict) -> dict:
         """
         Create an account in OSC using the provided payload and access token.
 
@@ -105,12 +89,18 @@ class osc_io:
         Returns:
             dict: JSON response from OSC API.
         """
-        url = "https://crowncastle-dev.crm.dynamics.com/api/data/v9.1/accounts"
+        access_token = self.get_osc_access_token(secret_data=secret_data)
+        url = secret_data["DM_OSC_API_Account_Create"]
         headers = {
             'Content-Type': 'application/json',
             'Authorization': f"Bearer {access_token}",
             'Prefer': 'return=representation'
         }
         # Make POST request to create account
-        response = requests.request("POST", url, headers=headers, data=payload_data, verify=False)
+        _, response = HttpsIo(logger=self.logger).http_request(
+            http_method='POST',
+            http_url=url,
+            http_head=headers,
+            http_data=payload_data
+        )
         return response.json()

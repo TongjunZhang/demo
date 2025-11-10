@@ -1,3 +1,12 @@
+
+import urllib3.util.ssl_
+ 
+if not hasattr(urllib3.util.ssl_, 'DEFAULT_CIPHERS'):
+    # Define a secure default cipher string
+    urllib3.util.ssl_.DEFAULT_CIPHERS = (
+        "ECDHE+AESGCM:ECDHE+CHACHA20:ECDHE+AES256:ECDHE+AES128:!aNULL:!eNULL:!MD5"
+    )
+
 import logging
 import argparse
 from tasks.aws_api_io import MarketoETL, SecretsManagerIO
@@ -35,10 +44,7 @@ class Argunents:
         self.args: dict = None
         self.arg_parse = argparse.ArgumentParser()
         # Define all required and optional arguments
-        self.arg_parse.add_argument('--conf_table', help='MarketETL Configuration Table', type=str, required=True)
-        self.arg_parse.add_argument('--ops_table', help='MarketETL Operations table', type=str, required=True)
         self.arg_parse.add_argument('--env', help="environment (dev, stage, prod)", type=str, required=True)
-        self.arg_parse.add_argument('--bucket_name', help="s3 bucket to put api results", type=str, required=True)
         self.arg_parse.add_argument('--secret_name', help="secret for marketoETL", type=str, required=True)
         self.arg_parse.add_argument('--pipelineIds', help="pipelineIds to execute for", type=str, required=False, default="*")
         self.arg_parse.add_argument('--job_stage', help="job stage for this glue job", type=str, required=False, default="marketoETL_to_snowflake")
@@ -84,21 +90,70 @@ def process_pipeline(
         )
     except Exception as e:
         logger.error(f"Error getting secret data: {e}")
-        return
+    if args_u.env == 'dev':
+        secret_data = {
+            "DM_Snowflake_token_url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/v2.0/token",
+            "DM_Snowflake_auth_scope" : "https://crowncastle.com/bde23c60-815b-4bcb-86ff-95b5d57bf3fd-SnowflakeOAuthForServiceAccounts/.default",
+            "DM_Snowflake_client_ID" : "f9d84658-0724-46b8-80cc-7719d413ef88",
+            "DM_Snowflake_client_secret"  : "VT7939Jpp5lgBfpNyaLd2rYoCpGhIQsMj2xStgWyGrc=",
+            "DM_Snowflake_grant_type" : "client_credentials",
+            "DM_Snowflake_Database" : "CDWDEV",
+            "DM_Snowflake_Account" : "ccic-mainnew",
+            "DM_Snowflake_Azure_User_ID" : "0baab986-1a68-4191-953b-147d8fc0c71c",
+            "DM_Snowflake_Role" : "DATA_MANAGEMENT_RO_ROLE",
+            "DM_Snowflake_Warehouse" : "BUSINESS_REPORTING_WH",
+            "DM_OSC_API_Account_Create" : "https://crowncastle-dev.crm.dynamics.com/api/data/v9.1/accounts",
+            "DM_OSC_API_Token_Create_Url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token",
+            "DM_OSC_API_Client_ID" : "db80b2c6-bfdc-49af-9627-f63b73b85ada",
+            "DM_OSC_API_Client_Secret" : "PBTRXCa6lnE_-G6M5S-e8H5T0ek5.A3E-D",
+            "DM_OSC_API_Scope" : "https://vault.azure.net/.default",
+            "DM_OSC_API_Grant_Type" : "client_credentials",
+            "DM_OSC_API_Resource" : "https://crowncastle-dev.crm.dynamics.com"
+        }
+    elif args_u.env == 'prod':
+        secret_data = {
+            "DM_Snowflake_token_url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/v2.0/token",
+            "DM_Snowflake_auth_scope" : "https://crowncastle.com/bde23c60-815b-4bcb-86ff-95b5d57bf3fd-SnowflakeOAuthForServiceAccounts/.default",
+            "DM_Snowflake_client_ID" : "625e68db-fb5d-4b5e-96e6-0a5dc0eb62da",
+            "DM_Snowflake_client_secret"  : "scoUzM34N+72s8ArjShRYARdwUcgr9ATJ8cT99IdjpA=",
+            "DM_Snowflake_grant_type" : "client_credentials",
+            "DM_Snowflake_Database" : "CDWPRD",
+            "DM_Snowflake_Account" : "ccic-mainnew",
+            "DM_Snowflake_Azure_User_ID" : "9e33ff8b-da14-46ce-bcfb-d2bc6cdf9f23",
+            "DM_Snowflake_Role" : "DATA_MANAGEMENT_RO_ROLE",
+            "DM_Snowflake_Warehouse" : "BUSINESS_REPORTING_WH",
+            "DM_OSC_API_Account_Create" : "https://crowncastle.crm.dynamics.com/api/data/v9.1/accounts",
+            "DM_OSC_API_Token_Create_Url" : "https://login.microsoftonline.com/3c614fdd-6711-42ae-a368-f96ab9460598/oauth2/token",
+            "DM_OSC_API_Client_ID" : "d9f4fcfc-a3b0-49e7-8a74-c0770dd6e381",
+            "DM_OSC_API_Client_Secret" : "CqZoRq_EzmvoEvP-_oN.s8.z21~J7p7ZeC",
+            "DM_OSC_API_Scope" : "https://vault.azure.net/.default",
+            "DM_OSC_API_Grant_Type" : "client_credentials",
+            "DM_OSC_API_Resource" : "https://crowncastle.crm.dynamics.com"
+            }
+    else:
+        secret_data = None    
 
     logger.info('Step: Get data from zoominfo from snowflake')
     zoomInfo_rows = None
+    snowfalke_connect = None
+    try:
+        snowfalke_connect = snowflake_io(
+            args=args_u,
+            logger=logger,
+            pipeline_id=pipeline_id  #,
+            # execution_id=execution_id
+        ).return_connection(secret_data)
+    except Exception as e:
+        logger.info(f"Error getting snowflake connection: {e}")
     try:
         # Fetch entity data from Snowflake
         zoomInfo_rows = snowflake_io(
             args=args_u,
             logger=logger,
-            pipeline_id=pipeline_id,
-            execution_id=execution_id
+            pipeline_id=pipeline_id  #,
+#            execution_id=execution_id
         ).transfer_entity_data(
-            watermark=watermark_value,
-            secret_data=secret_data,
-            source=args_u.source
+            snowfalke_connect
         )
     except Exception as e:
         logger.error(f"Error getting data from snowflake: {e}")
@@ -116,7 +171,7 @@ def process_pipeline(
             payload = MarketoETL(
                 args=args_u,
                 logger=logger
-            ).put_item(row)
+            ).put_item(row=row)
         except Exception as e:
             logger.error(f"Error putting execution data to OSC: {e}")
             return
@@ -126,14 +181,28 @@ def process_pipeline(
             oscresponse = osc_io(
                 args=args_u,
                 logger=logger,
-                pipeline_id=pipeline_id,
-                execution_id=execution_id
+                pipeline_id=pipeline_id
             ).create_OSC_Account(
-                payload_data=payload
+                payload_data=payload,
+                secret_data=secret_data
             )
         except Exception as e:
             logger.error(f"Error putting payload data to OSC: {e}")
             return
+        accountnumber = oscresponse.get('accountnumber')
+        if  accountnumber is not None:
+            try:
+                snowflake_io(
+                    args=args_u,
+                    logger=logger,
+                    pipeline_id=pipeline_id
+                ).update_osc_account(connect=snowfalke_connect,
+                                     accountnumber=accountnumber, 
+                                     zoominfo_company_id=row[0])
+            except Exception as e:
+                logger.error(f"Error updating OSC account in Snowflake: {e}")
+                return
+    snowfalke_connect.close()
 
 # Main function to orchestrate pipeline processing
 def main():
@@ -149,19 +218,15 @@ def main():
         pipeline_ids = MarketoETL(
             args=args_u,
             logger=logger
-        ).get_items(
-            table_name=args_u.conf_table,
-            key={"integrationPattern": args_u.source, "consumeFlag": 1},
-            fields="pipelineId"
         )
         logger.info(pipeline_ids)
-        pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
+        # pipeline_ids = [item['pipelineId'] for item in pipeline_ids]
     else:
         pipeline_ids = list(args_u.pipelineIds.split(','))
     logger.info("pipelines to execute for this %s" % pipeline_ids)
     # Use ThreadPoolExecutor to process pipelines concurrently
     with concurrent.futures.ThreadPoolExecutor(max_workers=args_u.max_workers) as executor:
-        futures = [executor.submit(process_pipeline, pipeline_id, logger, args_u) for pipeline_id in pipeline_ids]
+        futures = [executor.submit(process_pipeline, '1', logger, args_u)] 
         for future in concurrent.futures.as_completed(futures):
             try:
                 future.result()
