@@ -6,7 +6,7 @@ import logging
 import argparse
 import boto3
 
-class osc_account_io:
+class OscAccountIo:
     """
     Class to interact with OSC (Oracle Service Cloud) and handle API requests,
     authentication, and payload management.
