@@ -86,7 +86,7 @@ def process_pipeline(
             args=args_u,
             logger=logger
         ).get_secret(
-            args_u.env+"cci-eap-edmdq-marketo/DM_Snowflake_OSC_Marketo_ETL"
+            args_u.env+"/cci-eap-edmdq-marketo/DM_Snowflake_OSC_Marketo_ETL"
         )
     except Exception as e:
         logger.error(f"Error getting secret data: {e}")
